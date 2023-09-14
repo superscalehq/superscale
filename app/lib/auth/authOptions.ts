@@ -19,7 +19,9 @@ export const authOptions: NextAuthOptions = {
       clientSecret: serverConfig.GOOGLE_CLIENT_SECRET,
     }),
     EmailProvider({
-      async sendVerificationRequest(params) {},
+      async sendVerificationRequest({ identifier, url }) {
+        console.log('sendVerificationRequest', identifier, url);
+      },
     }),
   ],
 };
