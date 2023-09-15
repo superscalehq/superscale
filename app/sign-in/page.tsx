@@ -6,12 +6,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { getProviders, signIn } from 'next-auth/react';
+import { getProviders } from 'next-auth/react';
 import Image from 'next/image';
-import GoogleLogo from './google_logo.svg';
 import SignInForm from './form';
+import GoogleLogo from './google_logo.svg';
 
-export default async function SignIn() {
+export default async function SignInPage() {
   const providers = await getProviders();
   return (
     <div className="flex min-h-full flex-1 flex-row items-center justify-center py-12 sm:px-6 lg:px-8">

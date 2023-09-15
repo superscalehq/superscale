@@ -37,5 +37,9 @@ next-env.d.ts
 # supabase
 .branches
 .temp
+
 # Sentry Auth Token
 .sentryclirc
+
+# email
+.react-email

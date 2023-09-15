@@ -11,6 +11,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getProviders, signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -23,6 +24,7 @@ interface Props {
 }
 
 export default function SignInForm({ providers }: Props) {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,12 +38,13 @@ export default function SignInForm({ providers }: Props) {
         return;
       }
 
-      const res = await signIn(emailProvider, {
+      await signIn(emailProvider, {
         email,
         redirect: false,
-        callbackUrl: `${window.location.origin}/sign-in/verify`,
+        callbackUrl: `${window.location.origin}/sign-in/check-email`,
       });
-      console.log(res);
+
+      router.push(`/sign-in/check-email?email=${encodeURIComponent(email)}`);
     } catch (err) {
       console.error('Error sending email: ', err);
     }

@@ -53,6 +53,15 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+// VerificationToken is NextAuth-specific. It is used to verify a user's email address.
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
 // An Organization is the main point of entry to the application. A user can't do anything until they create or join an organization.
 // A User can be a member of any number of Organizations.
 model Organization {
@@ -84,3 +93,5 @@ enum OrganizationRole {
   ADMIN
   MEMBER
 }
+
+

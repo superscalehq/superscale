@@ -4,6 +4,7 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import EmailProvider from 'next-auth/providers/email';
+import { resend } from '@/lib/resend';
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -19,8 +20,18 @@ export const authOptions: NextAuthOptions = {
       clientSecret: serverConfig.GOOGLE_CLIENT_SECRET,
     }),
     EmailProvider({
-      async sendVerificationRequest({ identifier, url }) {
-        console.log('sendVerificationRequest', identifier, url);
+      async sendVerificationRequest(params) {
+        try {
+          console.log({ params });
+          // await resend.emails.send({
+          //   from: 'YOUR EMAIL FROM (eg: team@resend.com)',
+          //   to: identifier,
+          //   subject: 'YOUR EMAIL SUBJECT',
+          //   html: 'YOUR EMAIL CONTENT',
+          // });
+        } catch (error) {
+          console.log({ error });
+        }
       },
     }),
   ],
