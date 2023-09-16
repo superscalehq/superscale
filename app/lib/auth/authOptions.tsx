@@ -1,15 +1,17 @@
+import MagicLinkEmail from '@/components/emails/magic-link';
 import { serverConfig } from '@/lib/config';
 import { prisma } from '@/lib/db';
+import { resend } from '@/lib/resend';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { NextAuthOptions } from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
 import EmailProvider from 'next-auth/providers/email';
-import { resend } from '@/lib/resend';
+import GoogleProvider from 'next-auth/providers/google';
 
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
   },
+  secret: serverConfig.NEXTAUTH_SECRET,
   pages: {
     signIn: 'sign-in',
   },
@@ -22,13 +24,12 @@ export const authOptions: NextAuthOptions = {
     EmailProvider({
       async sendVerificationRequest(params) {
         try {
-          console.log({ params });
-          // await resend.emails.send({
-          //   from: 'YOUR EMAIL FROM (eg: team@resend.com)',
-          //   to: identifier,
-          //   subject: 'YOUR EMAIL SUBJECT',
-          //   html: 'YOUR EMAIL CONTENT',
-          // });
+          await resend.emails.send({
+            from: 'no-reply@superscale.app',
+            to: params.identifier,
+            subject: 'Sign in to Superscale',
+            react: <MagicLinkEmail link={params.url} />,
+          });
         } catch (error) {
           console.log({ error });
         }
