@@ -1,4 +1,4 @@
-import user from '@/api/trpc/routes/user';
+import user from '@/app/api/trpc/routes/user';
 import { TRPCError, initTRPC } from '@trpc/server';
 import { type Session } from 'next-auth';
 import superjson from 'superjson';

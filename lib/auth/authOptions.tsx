@@ -1,7 +1,7 @@
-import MagicLinkEmail from '@/components/emails/magic-link';
-import { serverConfig } from '@/lib/config';
-import { prisma } from '@/lib/db';
-import { resend } from '@/lib/resend';
+import MagicLinkEmail from '../../components/emails/magic-link';
+import { serverConfig } from '../config';
+import { prisma } from '../db';
+import { resend } from '../resend';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { NextAuthOptions } from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { router, protectedProcedure } from '@/api/trpc/routes';
+import { router, protectedProcedure } from '@/app/api/trpc/routes';
 import * as userCrud from '@/crud/user';
 
 const updateUserSchema = z.object({

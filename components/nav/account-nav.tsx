@@ -10,9 +10,9 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '../ui/dropdown-menu';
 
-import { UserAvatar } from '@/components/nav/user-avatar';
+import { UserAvatar } from './user-avatar';
 
 interface Props {
   user: User;
