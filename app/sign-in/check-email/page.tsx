@@ -13,7 +13,7 @@ export default function CheckEmailPage({ searchParams }: Props) {
   const params = schema.safeParse(searchParams);
   return (
     <div className="container h-full">
-      <div className="flex h-full w-full flex-row items-center justify-center">
+      <div className="flex h-full w-full flex-col items-center justify-center sm:flex-row">
         <div className="flex flex-1 flex-col items-center justify-center">
           {params.success ? (
             <div className="flex flex-col justify-center">
@@ -40,7 +40,7 @@ export default function CheckEmailPage({ searchParams }: Props) {
             </div>
           )}
         </div>
-        <div className="flex flex-1 flex-col">
+        <div className="hidden flex-1 flex-col md:flex">
           <Image src="/logo.png" alt={'logo'} width="800" height="800" />
         </div>
       </div>
