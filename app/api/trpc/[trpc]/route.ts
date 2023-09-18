@@ -1,4 +1,4 @@
-import router from '@/api/trpc/routes';
+import router from '@/app/api/trpc/routes';
 import { authOptions } from '../../../../lib/auth/authOptions';
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { getServerSession } from 'next-auth/next';
