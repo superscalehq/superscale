@@ -41,7 +41,7 @@ export default function SignInForm({ providers }: Props) {
       await signIn(emailProvider, {
         email,
         redirect: false,
-        callbackUrl: '/',
+        callbackUrl: '/dashboard',
       });
 
       router.push(`/sign-in/check-email?email=${encodeURIComponent(email)}`);
