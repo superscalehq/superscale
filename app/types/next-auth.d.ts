@@ -11,3 +11,13 @@ declare module 'next-auth' {
     } & DefaultSession['user'];
   }
 }
+
+declare module 'next-auth/jwt' {
+  /**
+   * Returned by the `jwt` callback and `getToken`, when using JWT sessions
+   */
+  interface JWT {
+    /** The user's postal address. */
+    id: string;
+  }
+}

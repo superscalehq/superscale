@@ -16,7 +16,7 @@ model User {
   updatedAt     DateTime                 @updatedAt
   deletedAt     DateTime?
   username      String?
-  email         String                   @unique
+  email         String?                  @unique
   emailVerified String?
   image         String?
   password      String?
@@ -93,5 +93,3 @@ enum OrganizationRole {
   ADMIN
   MEMBER
 }
-
-

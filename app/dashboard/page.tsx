@@ -1,17 +1,19 @@
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
-import { authOptions } from '../../lib/auth/authOptions';
+import { authOptions } from '@/lib/auth/authOptions';
+import * as userCrud from '@/crud/user';
 
-export default async function Home() {
+export default async function Dashboard() {
   const session = await getServerSession(authOptions);
-  console.log('session: ', session);
   if (!session) {
     return redirect('/sign-in');
   }
+  const user = await userCrud.getById(session.user.id);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       {JSON.stringify(session, null, 2)}
+      {JSON.stringify(user, null, 2)}
     </main>
   );
 }

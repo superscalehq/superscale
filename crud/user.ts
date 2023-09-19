@@ -10,3 +10,11 @@ export async function update(id: string, data: UpdateUserData) {
     data,
   });
 }
+
+export async function getById(id: string) {
+  const prisma = Prisma.getInstance();
+  return await prisma.user.findUnique({
+    where: { id },
+    include: { memberships: { include: { organization: true } } },
+  });
+}

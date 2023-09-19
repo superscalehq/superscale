@@ -1,11 +1,11 @@
-import MagicLinkEmail from '../../components/emails/magic-link';
-import { serverConfig } from '../config';
-import { prisma } from '../db';
-import { resend } from '../resend';
+import { prisma } from '@/lib/db';
+import { resend } from '@/lib/resend';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { NextAuthOptions } from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
 import GoogleProvider from 'next-auth/providers/google';
+import MagicLinkEmail from '../../components/emails/magic-link';
+import { serverConfig } from '../config';
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -36,4 +36,32 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user }) {
+      const u = await prisma.user.findFirst({
+        where: {
+          email: token.email,
+        },
+      });
+      if (!u) {
+        if (user) {
+          token.id = user.id;
+        }
+        return token;
+      }
+      return {
+        ...token,
+        id: u.id,
+        name: u.username,
+        email: u.email,
+        image: u.image,
+      };
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id;
+      }
+      return session;
+    },
+  },
 };

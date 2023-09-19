@@ -1,10 +1,17 @@
 import { Button } from '@/components/ui/button';
+import { getServerSession } from 'next-auth';
 import { getProviders } from 'next-auth/react';
 import Image from 'next/image';
 import SignInForm from './form';
 import GoogleLogo from './google_logo.svg';
+import { redirect } from 'next/navigation';
 
 export default async function SignInPage() {
+  const session = await getServerSession();
+  if (session?.user) {
+    redirect('/dashboard');
+  }
+
   const providers = await getProviders();
   return (
     <div className="container flex h-screen w-screen flex-col items-center justify-center py-12 sm:px-6 lg:px-8">
