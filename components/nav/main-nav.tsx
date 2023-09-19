@@ -1,15 +1,13 @@
 'use client';
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { useSelectedLayoutSegment } from 'next/navigation';
+import { Icons } from '@/components/icons';
 import cn from 'classnames';
-
-interface NavItem {
-  name: string;
-  href: string;
-  disabled?: boolean;
-}
+import Image from 'next/image';
+import Link from 'next/link';
+import { useSelectedLayoutSegment } from 'next/navigation';
+import { useState } from 'react';
+import { MobileNav } from './mobile-nav';
+import { NavItem } from './types';
 
 interface NavProps {
   items: NavItem[];
@@ -17,6 +15,7 @@ interface NavProps {
 
 export function MainNav({ items }: NavProps) {
   const segment = useSelectedLayoutSegment();
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="flex md:gap-10">
@@ -43,6 +42,20 @@ export function MainNav({ items }: NavProps) {
           ))}
         </nav>
       ) : null}
+      <button
+        className="flex items-center space-x-2 md:hidden"
+        onClick={() => setOpen(!open)}
+      >
+        {open ? (
+          <Icons.close />
+        ) : (
+          <Image width={36} height={36} src="/logo.png" alt="Superscale" />
+        )}
+        <span className="font-bold">Superscale</span>
+      </button>
+      {open && items.length && (
+        <MobileNav items={items} onClose={() => setOpen(false)} />
+      )}
     </div>
   );
 }
