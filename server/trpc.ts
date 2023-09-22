@@ -1,4 +1,3 @@
-import user from '@/app/api/trpc/routes/user';
 import { TRPCError, initTRPC } from '@trpc/server';
 import { type Session } from 'next-auth';
 import superjson from 'superjson';
@@ -25,5 +24,3 @@ const authMiddleware = t.middleware(async ({ ctx, next }) => {
 });
 
 export const protectedProcedure = t.procedure.use(authMiddleware);
-
-export default router({ user });

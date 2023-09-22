@@ -64,7 +64,7 @@ export default function SignInForm({ providers }: Props) {
               <FormMessage />
             </FormItem>
           )}
-        ></FormField>
+        />
         <Button
           type="submit"
           className="mt-4 w-full"

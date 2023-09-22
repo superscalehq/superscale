@@ -8,7 +8,11 @@ export default async function Dashboard() {
   if (!session) {
     return redirect('/sign-in');
   }
+
   const user = await userCrud.getById(session.user.id);
+  if (user?.memberships.length === 0) {
+    return redirect('/onboarding');
+  }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">

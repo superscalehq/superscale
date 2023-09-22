@@ -1,10 +1,9 @@
-import { z } from 'zod';
-import { router, protectedProcedure } from '@/app/api/trpc/routes';
 import * as userCrud from '@/crud/user';
+import { protectedProcedure, router } from '@/server/trpc';
+import { z } from 'zod';
 
 const updateUserSchema = z.object({
-  name: z.string().optional(),
-  email: z.string().email().optional(),
+  username: z.string().optional(),
 });
 
 const updateUserHandler = protectedProcedure
@@ -14,5 +13,5 @@ const updateUserHandler = protectedProcedure
   });
 
 export default router({
-  updateUser: updateUserHandler,
+  update: updateUserHandler,
 });
