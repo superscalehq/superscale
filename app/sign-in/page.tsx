@@ -1,18 +1,17 @@
-import { Button } from '@/components/ui/button';
 import { getServerSession } from 'next-auth';
 import { getProviders } from 'next-auth/react';
 import Image from 'next/image';
-import SignInForm from './form';
-import GoogleLogo from './google_logo.svg';
 import { redirect } from 'next/navigation';
+import SignInForm from './form';
+import Oauth from './oauth';
 
 export default async function SignInPage() {
   const session = await getServerSession();
   if (session?.user) {
     redirect('/dashboard');
   }
-
   const providers = await getProviders();
+
   return (
     <div className="container flex h-screen w-screen flex-col items-center justify-center py-12 sm:px-6 lg:px-8">
       <div className="mb-12 flex flex-col items-center">
@@ -35,9 +34,7 @@ export default async function SignInPage() {
           </p>
         </div>
         <div className="flex w-full flex-col">
-          <Button className="w-full">
-            <GoogleLogo className="mr-2 h-4 w-4" /> Login with Google
-          </Button>
+          <Oauth />
           <div className="relative my-4">
             <div
               className="absolute inset-0 flex items-center"

@@ -3,7 +3,7 @@ import { resend } from '@/lib/resend';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { NextAuthOptions } from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
-import GoogleProvider from 'next-auth/providers/google';
+import GoogleProvider, { GoogleProfile } from 'next-auth/providers/google';
 import MagicLinkEmail from '../../components/emails/magic-link';
 import { serverConfig } from '../config';
 
@@ -13,7 +13,7 @@ export const authOptions: NextAuthOptions = {
   },
   secret: serverConfig.NEXTAUTH_SECRET,
   pages: {
-    signIn: 'sign-in',
+    signIn: '/sign-in',
     error: '/auth/error',
   },
   adapter: PrismaAdapter(prisma),
@@ -21,6 +21,7 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: serverConfig.GOOGLE_CLIENT_ID,
       clientSecret: serverConfig.GOOGLE_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true, // we only allow Google sign ins to be linked, because we check that the email is verified
     }),
     EmailProvider({
       async sendVerificationRequest(params) {
@@ -58,11 +59,17 @@ export const authOptions: NextAuthOptions = {
         image: u.image,
       };
     },
+    // session is called after `jwt` callback.
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id;
       }
       return session;
+    },
+    async signIn({ account, profile }) {
+      if (account?.provider === 'google')
+        return (profile as GoogleProfile).email_verified;
+      return true;
     },
   },
 };
