@@ -9,8 +9,6 @@ import { OrganizationRole } from '@prisma/client';
  * @returns
  */
 export async function create(organizationName: string, userId: string) {
-  console.log('test test');
-  console.log('input: ', organizationName, userId);
   const organization = await prisma.organization.create({
     data: {
       name: organizationName,
