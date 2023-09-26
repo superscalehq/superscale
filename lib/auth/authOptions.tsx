@@ -13,7 +13,7 @@ export const authOptions: NextAuthOptions = {
   },
   secret: serverConfig.NEXTAUTH_SECRET,
   pages: {
-    signIn: '/sign-in',
+    signIn: '/auth/sign-in',
     error: '/auth/error',
   },
   adapter: PrismaAdapter(prisma),

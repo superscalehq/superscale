@@ -60,7 +60,7 @@ export default function AuthErrorPage({ searchParams }: Props) {
             {copy(params.error)}
             <Link
               className={cn(buttonVariants({ variant: 'outline' }), 'mt-4')}
-              href="/sign-in"
+              href="/auth/sign-in"
             >
               Sign in
             </Link>

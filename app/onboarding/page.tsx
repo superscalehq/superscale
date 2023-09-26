@@ -14,7 +14,7 @@ export enum Steps {
 export default async function OnboardingPage() {
   const session = await getServerSession(authOptions);
   if (!session) {
-    return redirect('/sign-in');
+    return redirect('/auth/sign-in');
   }
 
   const user = await userCrud.getById(session.user.id);

@@ -54,7 +54,7 @@ export function AccountNav({ user }: Props) {
           onSelect={(event) => {
             event.preventDefault();
             signOut({
-              callbackUrl: `${window.location.origin}/sign-in`,
+              callbackUrl: `${window.location.origin}/auth/sign-in`,
             });
           }}
         >
