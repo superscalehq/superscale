@@ -15,14 +15,14 @@ model User {
   createdAt     DateTime                 @default(now())
   updatedAt     DateTime                 @updatedAt
   deletedAt     DateTime?
-  username      String?
+  name          String?
   email         String?                  @unique
-  emailVerified String?
+  emailVerified DateTime?
   image         String?
   password      String?
   memberships   OrganizationMembership[]
-  Account       Account[]
-  Session       Session[]
+  accounts      Account[]
+  sessions      Session[]
 }
 
 // Account is an external account from a third-party provider in the OAuth flow.

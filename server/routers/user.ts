@@ -3,7 +3,7 @@ import { protectedProcedure, router } from '@/server/trpc';
 import { z } from 'zod';
 
 const updateUserSchema = z.object({
-  username: z.string().optional(),
+  name: z.string().optional(),
 });
 
 const updateUserHandler = protectedProcedure

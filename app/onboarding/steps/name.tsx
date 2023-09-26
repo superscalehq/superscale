@@ -33,7 +33,7 @@ export default function NameStep({ user, setLoading }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: user.username ?? '',
+      name: user.name ?? '',
     },
   });
   const router = useRouter();
@@ -43,7 +43,7 @@ export default function NameStep({ user, setLoading }: Props) {
     async ({ name }: z.infer<typeof formSchema>) => {
       try {
         setLoading(true);
-        await updateUser.mutateAsync({ username: name });
+        await updateUser.mutateAsync({ name });
         router.refresh();
         nextStep();
       } finally {
