@@ -1,7 +1,7 @@
-import { MainNav } from '../../components/nav/main-nav';
-import { dashboardConfig } from '../../config/dashboard';
-import { AccountNav } from '../../components/nav/account-nav';
-import { getCurrentUser } from '../../lib/auth/session';
+import { AccountNav } from '@/components/nav/account-nav';
+import { MainNav } from '@/components/nav/main-nav';
+import { dashboardConfig } from '@/config/dashboard';
+import { getCurrentUser } from '@/lib/auth/session';
 import { redirect } from 'next/navigation';
 
 export default async function DashboardLayout({
@@ -13,6 +13,10 @@ export default async function DashboardLayout({
 
   if (!user) {
     redirect('/auth/sign-in');
+  }
+
+  if (user.memberships.length === 0) {
+    redirect('/onboarding');
   }
 
   return (
