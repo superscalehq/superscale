@@ -1,14 +1,14 @@
 'use client';
 
-import { Button } from '../../../components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from '../../../components/ui/form';
-import { Input } from '../../../components/ui/input';
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getProviders, signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -21,15 +21,19 @@ const formSchema = z.object({
 
 interface Props {
   providers: Awaited<ReturnType<typeof getProviders>>;
+  email?: string;
+  invitationId?: string;
 }
 
-export default function SignInForm({ providers }: Props) {
+export default function SignInForm({
+  providers,
+  invitationId,
+  email = '',
+}: Props) {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: '',
-    },
+    defaultValues: { email },
   });
   const handleSubmit = async ({ email }: z.infer<typeof formSchema>) => {
     try {
@@ -38,11 +42,19 @@ export default function SignInForm({ providers }: Props) {
         return;
       }
 
-      await signIn(emailProvider, {
-        email,
-        redirect: false,
-        callbackUrl: '/dashboard',
-      });
+      const data = new URLSearchParams();
+      data.append('test_search_param', 'test_search_value');
+      await signIn(
+        emailProvider,
+        {
+          email,
+          redirect: false,
+          callbackUrl: invitationId
+            ? `/auth/invitation/${invitationId}?accept=true`
+            : '/dashboard',
+        },
+        data
+      );
 
       router.push(`/auth/check-email?email=${encodeURIComponent(email)}`);
     } catch (err) {

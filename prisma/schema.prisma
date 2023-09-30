@@ -11,18 +11,21 @@ datasource db {
 }
 
 model User {
-  id            String                   @id @default(cuid())
-  createdAt     DateTime                 @default(now())
-  updatedAt     DateTime                 @updatedAt
-  deletedAt     DateTime?
-  name          String?
-  email         String?                  @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?
-  memberships   OrganizationMembership[]
-  accounts      Account[]
-  sessions      Session[]
+  id             String                   @id @default(cuid())
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
+  deletedAt      DateTime?
+  name           String?
+  email          String?                  @unique
+  emailVerified  DateTime?
+  image          String?
+  password       String?
+  memberships    OrganizationMembership[]
+  accounts       Account[]
+  sessions       Session[]
+  UserInvitation UserInvitation[]
+
+  @@index([email])
 }
 
 // Account is an external account from a third-party provider in the OAuth flow.
@@ -65,13 +68,14 @@ model VerificationToken {
 // An Organization is the main point of entry to the application. A user can't do anything until they create or join an organization.
 // A User can be a member of any number of Organizations.
 model Organization {
-  id        String                   @id @default(cuid())
-  createdAt DateTime                 @default(now())
-  updatedAt DateTime                 @updatedAt
-  deletedAt DateTime?
-  name      String
-  slug      String?                  @unique
-  members   OrganizationMembership[]
+  id             String                   @id @default(cuid())
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
+  deletedAt      DateTime?
+  name           String
+  slug           String?                  @unique
+  members        OrganizationMembership[]
+  UserInvitation UserInvitation[]
 }
 
 // Member is a join table that links Users to Organizations.
@@ -92,4 +96,27 @@ enum OrganizationRole {
   OWNER
   ADMIN
   MEMBER
+}
+
+// UserInvitationStatus is used to track the status of an invitation.
+enum UserInvitationStatus {
+  PENDING
+  ACCEPTED
+}
+
+// An UserInvitation is a link that can be sent to a user to invite them to join an Organization.
+model UserInvitation {
+  id             String               @id @default(cuid())
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @default(now()) @updatedAt
+  createdBy      User                 @relation(fields: [createdById], references: [id])
+  createdById    String
+  email          String
+  organizationId String
+  organization   Organization         @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  role           OrganizationRole
+  status         UserInvitationStatus
+
+  @@unique([email, organizationId])
+  @@index([organizationId])
 }

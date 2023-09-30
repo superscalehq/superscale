@@ -1,16 +1,18 @@
-import { getServerSession } from 'next-auth';
 import { getProviders } from 'next-auth/react';
 import Image from 'next/image';
-import { redirect } from 'next/navigation';
 import SignInForm from './form';
 import Oauth from './oauth';
 
-export default async function SignInPage() {
-  const session = await getServerSession();
-  if (session?.user) {
-    redirect('/dashboard');
-  }
+interface Props {
+  searchParams: {
+    email?: string;
+    invitationId?: string;
+  };
+}
+
+export default async function SignInPage({ searchParams }: Props) {
   const providers = await getProviders();
+  const { email, invitationId } = searchParams;
 
   return (
     <div className="container flex h-screen w-screen flex-col items-center justify-center py-12 sm:px-6 lg:px-8">
@@ -48,7 +50,11 @@ export default async function SignInPage() {
               </span>
             </div>
           </div>
-          <SignInForm providers={providers} />
+          <SignInForm
+            providers={providers}
+            email={email}
+            invitationId={invitationId}
+          />
         </div>
       </div>
     </div>

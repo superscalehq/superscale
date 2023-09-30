@@ -18,3 +18,10 @@ export async function getById(id: string) {
     include: { memberships: { include: { organization: true } } },
   });
 }
+
+export async function findByEmail(email: string) {
+  return await prisma.user.findUnique({
+    where: { email },
+    include: { memberships: true },
+  });
+}

@@ -60,7 +60,7 @@ interface OnboardingProps {
 
 export default function Onboarding(props: OnboardingProps) {
   const { user } = props;
-  const initialStep = user.username ? 1 : 0;
+  const initialStep = user.name ? 1 : 0;
   const [loading, setLoading] = useState(false);
   return (
     <Card className="flex flex-col px-8 py-6 md:h-[500px] md:w-[600px]">

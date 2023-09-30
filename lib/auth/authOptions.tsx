@@ -1,10 +1,10 @@
 import { prisma } from '@/lib/db';
-import { resend } from '@/lib/resend';
+import { resend } from '@/lib/email';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { NextAuthOptions } from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
 import GoogleProvider, { GoogleProfile } from 'next-auth/providers/google';
-import MagicLinkEmail from '../../components/emails/magic-link';
+import MagicLinkEmail from '../../emails/magic-link';
 import { serverConfig } from '../config';
 
 export const authOptions: NextAuthOptions = {
@@ -54,7 +54,7 @@ export const authOptions: NextAuthOptions = {
       return {
         ...token,
         id: u.id,
-        name: u.username,
+        name: u.name,
         email: u.email,
         image: u.image,
       };
