@@ -43,7 +43,6 @@ export default function SignInForm({
       }
 
       const data = new URLSearchParams();
-      data.append('test_search_param', 'test_search_value');
       await signIn(
         emailProvider,
         {

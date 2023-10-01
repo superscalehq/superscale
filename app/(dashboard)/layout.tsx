@@ -15,7 +15,7 @@ export default async function DashboardLayout({
     redirect('/auth/sign-in');
   }
 
-  if (user.memberships.length === 0) {
+  if (!user.name || user.memberships.length === 0) {
     redirect('/onboarding');
   }
 

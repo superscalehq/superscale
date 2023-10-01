@@ -1,7 +1,7 @@
 import * as invitationCrud from '@/crud/invitation';
 import { getCurrentUser } from '@/lib/auth/session';
-import { InvitationCard } from './card';
 import { redirect } from 'next/navigation';
+import { InvitationCard } from './card';
 
 interface Props {
   params: { invitationId: string };
@@ -16,7 +16,8 @@ export default async function AcceptInvitationPage({
   const invitation = await invitationCrud.findById(invitationId);
   if (accept && invitation && user && user.email === invitation.email) {
     await invitationCrud.accept(invitationId);
-    redirect('/dashboard');
+    if (!user.name) redirect('/onboarding');
+    else redirect('/dashboard');
   }
 
   return (
