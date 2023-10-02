@@ -54,7 +54,6 @@ export default function SignInForm({
         },
         data
       );
-
       router.push(`/auth/check-email?email=${encodeURIComponent(email)}`);
     } catch (err) {
       console.error('Error sending email: ', err);

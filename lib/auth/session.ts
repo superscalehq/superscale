@@ -7,9 +7,9 @@ import * as userCrud from '@/crud/user';
  * Retrieves the current user from the session.
  * This function only works in server components.
  *
- * @returns {Promise<UserWithMemberships | null>}
+ * @returns {Promise<userCrud.UserWithMemberships | null>}
  */
-export async function getCurrentUser() {
+export async function getCurrentUser(): Promise<userCrud.UserWithMemberships | null> {
   const session = await getServerSession(authOptions);
   if (!session?.user) {
     return null;

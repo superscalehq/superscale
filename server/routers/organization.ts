@@ -64,7 +64,19 @@ const invite = protectedProcedure
     );
   });
 
+const acceptInvitationSchema = z.object({
+  invitationId: z.string(),
+});
+
+const acceptInvitation = protectedProcedure
+  .input(acceptInvitationSchema)
+  .mutation(async ({ ctx, input }) => {
+    const { invitationId } = input;
+    await invitationCrud.accept(invitationId);
+  });
+
 export default router({
   create: createOrgHandler,
   invite,
+  acceptInvitation,
 });

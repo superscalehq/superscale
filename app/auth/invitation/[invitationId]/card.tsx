@@ -2,39 +2,47 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { InvitationWithOrgAndInviter } from '@/crud/invitation';
+import { UserWithMemberships } from '@/crud/user';
+import { t } from '@/lib/trpc';
 import { useRouter } from 'next/navigation';
 
 interface Props {
-  invitation: InvitationWithOrgAndInviter;
+  user?: UserWithMemberships | null;
+  invitation: NonNullable<InvitationWithOrgAndInviter>;
 }
 
-export function InvitationCard({ invitation }: Props) {
+export function InvitationCard({ invitation, user }: Props) {
   const router = useRouter();
-  const handleClick = () => {
+  const acceptInvitation = t.organization.acceptInvitation.useMutation();
+  const isRightUser = ;
+  const handleClick = async () => {
+    // The user is signed in to the correct account, but has not yet accepted the invitation.
+    if (isRightUser) {
+      await acceptInvitation.mutateAsync({ invitationId: invitation.id });
+      router.push('/dashboard');
+      return;
+    }
+
+    // User is not signed in, or signed in with the wrong email. redirect to sign in page.
     router.push(
-      invitation
-        ? `/auth/sign-in?email=${invitation.email}&invitationId=${invitation.id}`
-        : '/'
+      `/auth/sign-in?email=${invitation.email}&invitationId=${invitation.id}`
     );
   };
+
   return (
     <Card className="flex flex-col items-center md:w-[450px]">
       <CardHeader>
         <CardTitle>
-          {invitation
-            ? `${invitation.createdBy.name} has invited you to ${invitation.organization.name}`
-            : 'Invitation not found'}
+          {`${invitation.createdBy.name} has invited you to ${invitation.organization.name}`}
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col items-center space-y-6 text-center">
         <p className="text-sm text-foreground">
-          {invitation
-            ? `To accept the invitation, please sign in or create an account with ${invitation.email}`
-            : 'Please contact the person who invited you to get a new invitation.'}
+          {isRightUser
+            ? `You will be added to ${invitation.organization.name} once you accept the invitation.`
+            : `To accept the invitation, please sign in or create an account with ${invitation.email}`}
         </p>
-        <Button onClick={handleClick}>
-          {invitation ? 'Accept Invitation' : 'Back'}
-        </Button>
+        <Button onClick={handleClick}>Accept Invitation</Button>
       </CardContent>
     </Card>
   );

@@ -36,7 +36,7 @@ export default async function SignInPage({ searchParams }: Props) {
           </p>
         </div>
         <div className="flex w-full flex-col">
-          <Oauth />
+          <Oauth invitationId={invitationId} />
           <div className="relative my-4">
             <div
               className="absolute inset-0 flex items-center"
