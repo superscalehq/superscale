@@ -3,7 +3,7 @@ import * as organizationCrud from '@/crud/organization';
 import * as userCrud from '@/crud/user';
 import * as emails from '@/lib/email';
 import { protectedProcedure, router } from '@/server/trpc';
-import { OrganizationRole, UserInvitationStatus } from '@prisma/client';
+import { OrganizationRole } from '@prisma/client';
 import { z } from 'zod';
 
 const createOrganizationSchema = z.object({
@@ -41,15 +41,11 @@ const invite = protectedProcedure
       role,
       ctx.session.user.id
     );
-
-    // it should not be possible for an invitation to have a status of ACCEPTED at this point
-    // the user should already be associated with the organization
-    if (invitation.status === UserInvitationStatus.ACCEPTED) {
-      return;
-    }
-
     const inviter = await userCrud.getById(ctx.session.user.id);
     const link = emails.getInviteLink(invitation.id);
+
+    // this is a side effect, so this function is not strictly idempotent.
+    // however, we'll just leave it here and use accept as a way to re-send the email.
     await emails.sendEmail(
       'no-reply@superscale.app',
       email,

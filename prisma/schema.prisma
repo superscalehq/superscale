@@ -72,7 +72,7 @@ model Organization {
   createdAt      DateTime                 @default(now())
   updatedAt      DateTime                 @updatedAt
   deletedAt      DateTime?
-  name           String
+  name           String                   @unique
   slug           String?                  @unique
   members        OrganizationMembership[]
   UserInvitation UserInvitation[]
@@ -98,24 +98,17 @@ enum OrganizationRole {
   MEMBER
 }
 
-// UserInvitationStatus is used to track the status of an invitation.
-enum UserInvitationStatus {
-  PENDING
-  ACCEPTED
-}
-
 // An UserInvitation is a link that can be sent to a user to invite them to join an Organization.
 model UserInvitation {
-  id             String               @id @default(cuid())
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @default(now()) @updatedAt
-  createdBy      User                 @relation(fields: [createdById], references: [id])
+  id             String           @id @default(cuid())
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @default(now()) @updatedAt
+  createdBy      User             @relation(fields: [createdById], references: [id])
   createdById    String
   email          String
   organizationId String
-  organization   Organization         @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   role           OrganizationRole
-  status         UserInvitationStatus
 
   @@unique([email, organizationId])
   @@index([organizationId])

@@ -1,6 +1,5 @@
 import { prisma } from '@/lib/db';
-import { OrganizationRole, UserInvitationStatus } from '@prisma/client';
-import { Prisma as P } from '@prisma/client';
+import { OrganizationRole, Prisma as P } from '@prisma/client';
 
 export async function findOrCreate(
   email: string,
@@ -10,7 +9,6 @@ export async function findOrCreate(
 ) {
   const data = {
     email,
-    status: UserInvitationStatus.PENDING,
     organization: {
       connect: {
         id: organizationId,
@@ -49,7 +47,7 @@ export async function findById(id: string) {
 
 export async function accept(invitationId: string) {
   const invitation = await findById(invitationId);
-  if (!invitation || invitation.status === UserInvitationStatus.ACCEPTED) {
+  if (!invitation) {
     return;
   }
 
@@ -68,10 +66,9 @@ export async function accept(invitationId: string) {
       },
     },
   });
-  const updateInvitation = prisma.userInvitation.update({
+  const deleteInvitation = prisma.userInvitation.delete({
     where: { id: invitationId },
-    data: { status: UserInvitationStatus.ACCEPTED },
   });
 
-  await prisma.$transaction([associateUserWithOrg, updateInvitation]);
+  await prisma.$transaction([associateUserWithOrg, deleteInvitation]);
 }

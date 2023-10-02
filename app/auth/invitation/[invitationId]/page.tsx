@@ -1,6 +1,5 @@
 import * as invitationCrud from '@/crud/invitation';
 import { getCurrentUser } from '@/lib/auth/session';
-import { UserInvitationStatus } from '@prisma/client';
 import { notFound, redirect } from 'next/navigation';
 import { InvitationCard } from './card';
 
@@ -16,11 +15,6 @@ export default async function AcceptInvitationPage({
   const invitation = await invitationCrud.findById(invitationId);
   if (!invitation) {
     notFound();
-  }
-
-  // already accepted, redirect to dashboard
-  if (invitation.status === UserInvitationStatus.ACCEPTED) {
-    redirect('/dashboard');
   }
 
   const user = await getCurrentUser();
