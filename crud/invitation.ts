@@ -72,3 +72,10 @@ export async function accept(invitationId: string) {
 
   await prisma.$transaction([associateUserWithOrg, deleteInvitation]);
 }
+
+export async function listByOrganization(organizationId: string) {
+  return await prisma.userInvitation.findMany({
+    where: { organizationId },
+    include: { organization: true, createdBy: true },
+  });
+}

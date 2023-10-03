@@ -25,6 +25,7 @@
     "@sentry/nextjs": "^7.64.0",
     "@tanstack/react-query": "^4.32.6",
     "@tanstack/react-query-devtools": "^4.35.3",
+    "@tanstack/react-table": "^8.10.3",
     "@trpc/client": "^10.37.1",
     "@trpc/next": "^10.37.1",
     "@trpc/react-query": "^10.37.1",

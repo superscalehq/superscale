@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/db';
-import { OrganizationRole } from '@prisma/client';
+import { OrganizationRole, Prisma } from '@prisma/client';
 
 /**
  * Creates a new organization and adds the user as an admin.
@@ -25,4 +25,25 @@ export async function create(organizationName: string, userId: string) {
     },
   });
   return organization;
+}
+
+const memberWithUser =
+  Prisma.validator<Prisma.OrganizationMembershipDefaultArgs>()({
+    include: { user: true },
+  });
+
+export type MemberWithUser = Prisma.OrganizationMembershipGetPayload<
+  typeof memberWithUser
+>;
+
+/**
+ * Returns an organization with its members.
+ * @param organizationId
+ * @returns
+ */
+export async function members(organizationId: string) {
+  return await prisma.organizationMembership.findMany({
+    where: { organizationId },
+    include: { user: true },
+  });
 }
