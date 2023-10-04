@@ -44,9 +44,9 @@ export default async function MembersPage() {
   const data = await fetchData(user.memberships[0].organization.id);
 
   return (
-    <div className="flex flex-col space-y-6">
+    <div className="flex flex-col">
       <DashboardHeader heading="Team" text="Manage your team here." />
-      <Separator className="mt-4" />
+      <Separator className="mb-4 mt-6" />
       <InvitationForm user={user} />
       <DataTable data={data} columns={columns} />
     </div>

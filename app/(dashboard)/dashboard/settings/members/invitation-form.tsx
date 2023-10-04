@@ -22,6 +22,7 @@ import { t } from '@/lib/trpc';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { OrganizationRole } from '@prisma/client';
 import { redirect } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -42,6 +43,7 @@ export function InvitationForm({ user }: Props) {
       role: OrganizationRole.MEMBER,
     },
   });
+  const [loading, setLoading] = useState(false);
   // TODO: this should be derived from a slug, preferably
   const [membership] = user.memberships ?? [];
   // it's not supposed to be possible to get here without belonging to an organization.
@@ -52,6 +54,7 @@ export function InvitationForm({ user }: Props) {
   const invite = t.organization.invite.useMutation();
   const submit = form.handleSubmit(async ({ email, role }) => {
     try {
+      setLoading(true);
       await invite.mutateAsync({
         email,
         role,
@@ -59,12 +62,14 @@ export function InvitationForm({ user }: Props) {
       });
     } catch (err) {
       console.error('Error inviting user: ', err);
+    } finally {
+      setLoading(false);
     }
   });
 
   return (
-    <div>
-      <div className="my-4">
+    <div className="mb-10">
+      <div className="mt-4">
         <h3 className="text-lg font-medium">Invite a team member</h3>
         <p className="text-md">Send an invitation to a team member</p>
       </div>
@@ -76,7 +81,9 @@ export function InvitationForm({ user }: Props) {
             render={({ field }) => (
               <FormItem className="flex-1">
                 <FormLabel>Email</FormLabel>
-                <Input type="email" placeholder="Email" {...field} />
+                <FormControl>
+                  <Input type="text" placeholder="Email" {...field} />
+                </FormControl>
                 <FormMessage className="sm:absolute" />
               </FormItem>
             )}
@@ -108,7 +115,7 @@ export function InvitationForm({ user }: Props) {
               </FormItem>
             )}
           />
-          <Button className="mb-[1px]" type="submit">
+          <Button className="mb-[1px]" type="submit" loading={loading}>
             Invite
           </Button>
         </form>
