@@ -79,3 +79,7 @@ export async function listByOrganization(organizationId: string) {
     include: { organization: true, createdBy: true },
   });
 }
+
+export async function deleteById(id: string) {
+  return await prisma.userInvitation.delete({ where: { id } });
+}

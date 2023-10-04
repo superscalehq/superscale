@@ -30,6 +30,7 @@ async function fetchData(organizationId: string) {
       type: 'invitation',
       email: invitation.email,
       role: invitation.role,
+      invitationId: invitation.id,
     });
   }
   return data;

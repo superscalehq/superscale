@@ -3,7 +3,7 @@ import * as organizationCrud from '@/crud/organization';
 import * as userCrud from '@/crud/user';
 import * as emails from '@/lib/email';
 import { protectedProcedure, router } from '@/server/trpc';
-import { OrganizationRole } from '@prisma/client';
+import { OrganizationRole, UserInvitation } from '@prisma/client';
 import { z } from 'zod';
 
 const createOrganizationSchema = z.object({
@@ -41,23 +41,7 @@ const invite = protectedProcedure
       role,
       ctx.session.user.id
     );
-    const inviter = await userCrud.getById(ctx.session.user.id);
-    const link = emails.getInviteLink(invitation.id);
-
-    // this is a side effect, so this function is not strictly idempotent.
-    // however, we'll just leave it here and use accept as a way to re-send the email.
-    await emails.sendEmail(
-      'no-reply@superscale.app',
-      email,
-      `You have been invited to join ${invitation.organization.name} on Superscale`,
-      'invitation',
-      {
-        link,
-        organizationName: invitation.organization.name,
-        inviterName: inviter.name!!,
-        inviterEmail: inviter.email!!,
-      }
-    );
+    await sendInvitationEmail(ctx.session.user.id, invitation, email);
   });
 
 const acceptInvitationSchema = z.object({
@@ -71,8 +55,56 @@ const acceptInvitation = protectedProcedure
     await invitationCrud.accept(invitationId);
   });
 
+const revokeInvitationSchema = acceptInvitationSchema;
+
+const revokeInvitation = protectedProcedure
+  .input(revokeInvitationSchema)
+  .mutation(async ({ ctx, input }) => {
+    const { invitationId } = input;
+    await invitationCrud.deleteById(invitationId);
+  });
+
+const resendInvitationSchema = acceptInvitationSchema;
+const resendInvitation = protectedProcedure
+  .input(resendInvitationSchema)
+  .mutation(async ({ ctx, input }) => {
+    const { invitationId } = input;
+    const invitation = await invitationCrud.findById(invitationId);
+    if (!invitation) {
+      return;
+    }
+    await sendInvitationEmail(
+      ctx.session.user.id,
+      invitation,
+      invitation.email
+    );
+  });
+
+async function sendInvitationEmail(
+  senderUserId: string,
+  invitation: NonNullable<invitationCrud.InvitationWithOrgAndInviter>,
+  email: string
+) {
+  const inviter = await userCrud.getById(senderUserId);
+  const link = emails.getInviteLink(invitation.id);
+  await emails.sendEmail(
+    'no-reply@superscale.app',
+    email,
+    `You have been invited to join ${invitation.organization.name} on Superscale`,
+    'invitation',
+    {
+      link,
+      organizationName: invitation.organization.name,
+      inviterName: inviter.name!!,
+      inviterEmail: inviter.email!!,
+    }
+  );
+}
+
 export default router({
   create: createOrgHandler,
   invite,
   acceptInvitation,
+  revokeInvitation,
+  resendInvitation,
 });

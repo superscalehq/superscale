@@ -1,8 +1,18 @@
 'use client';
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { t } from '@/lib/trpc';
 import { OrganizationRole } from '@prisma/client';
 import { createColumnHelper } from '@tanstack/react-table';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { MoreHorizontal } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface BaseRowData {
   email: string;
@@ -17,6 +27,7 @@ interface MemberRowData extends BaseRowData {
 
 interface InvitationRowData extends BaseRowData {
   type: 'invitation';
+  invitationId: string;
 }
 
 export type RowData = MemberRowData | InvitationRowData;
@@ -73,14 +84,55 @@ export const columns = [
     cell(props) {
       const v = props.cell.getValue();
       return (
-        <div className="flex flex-row items-center space-x-2">
+        <div className="flex flex-row items-center space-x-4">
           <p>{v}</p>
           {props.row.original.type === 'invitation' ? (
-            <span className="inline-block rounded border-[1px] border-muted-foreground px-2 py-1 text-xs text-muted-foreground">
+            <span className="inline-block rounded border-[1px] border-muted-foreground px-2 py-0.5 text-xs text-muted-foreground">
               Pending
             </span>
           ) : null}
         </div>
+      );
+    },
+  }),
+  columnHelper.display({
+    id: 'actions',
+    size: 50,
+    cell(props) {
+      const row = props.row;
+      const revokeInvitation = t.organization.revokeInvitation.useMutation();
+      const resendInvitation = t.organization.resendInvitation.useMutation();
+      const router = useRouter();
+      const handleRevoke = async () => {
+        const { invitationId } = row.original as InvitationRowData;
+        await revokeInvitation.mutateAsync({ invitationId });
+        router.refresh();
+      };
+      const handleResend = async () => {
+        const { invitationId } = row.original as InvitationRowData;
+        await resendInvitation.mutateAsync({ invitationId });
+        router.refresh();
+      };
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {row.original.type === 'member' ? (
+              <DropdownMenuItem>Remove</DropdownMenuItem>
+            ) : null}
+            {row.original.type === 'invitation' ? (
+              <DropdownMenuItem onClick={handleRevoke}>Revoke</DropdownMenuItem>
+            ) : null}
+            {row.original.type === 'invitation' ? (
+              <DropdownMenuItem onClick={handleResend}>Resend</DropdownMenuItem>
+            ) : null}
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
   }),
