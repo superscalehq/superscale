@@ -1,17 +1,18 @@
 import { PrismaClient } from '@prisma/client';
 
-export class Prisma {
-  private static instance: PrismaClient;
-
-  private constructor() {}
-
-  public static getInstance(): PrismaClient {
-    if (!Prisma.instance) {
-      Prisma.instance = new PrismaClient();
-    }
-
-    return Prisma.instance;
-  }
+declare global {
+  // eslint-disable-next-line no-var
+  var cachedPrisma: PrismaClient;
 }
 
-export const prisma = Prisma.getInstance();
+let prismaClient: PrismaClient;
+if (process.env.NODE_ENV === 'production') {
+  prismaClient = new PrismaClient();
+} else {
+  if (!global.cachedPrisma) {
+    global.cachedPrisma = new PrismaClient();
+  }
+  prismaClient = global.cachedPrisma;
+}
+
+export const prisma = prismaClient;

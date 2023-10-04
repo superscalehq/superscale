@@ -22,6 +22,7 @@ async function fetchData(organizationId: string) {
       name: member.user.name!!,
       email: member.user.email!!,
       role: member.role,
+      imageUrl: member.user.image,
     });
   }
   for (const invitation of invitations ?? []) {
@@ -42,7 +43,7 @@ export default async function MembersPage() {
   const data = await fetchData(user.memberships[0].organization.id);
 
   return (
-    <div>
+    <div className="flex flex-col space-y-6">
       <DashboardHeader heading="Team" text="Manage your team here." />
       <Separator className="mt-4" />
       <InvitationForm user={user} />

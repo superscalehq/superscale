@@ -44,6 +44,6 @@ export type MemberWithUser = Prisma.OrganizationMembershipGetPayload<
 export async function members(organizationId: string) {
   return await prisma.organizationMembership.findMany({
     where: { organizationId },
-    include: { user: true },
+    include: { user: { include: { accounts: true } } },
   });
 }

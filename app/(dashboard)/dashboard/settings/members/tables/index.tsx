@@ -1,13 +1,6 @@
 'use client';
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import {
   ColumnDef,
   flexRender,
@@ -15,15 +8,14 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
-interface Props<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+interface Props<TData> {
+  // See https://github.com/TanStack/table/issues/4382
+  // The type of the columnDef is not inferred correctly.
+  columns: ColumnDef<TData, any>[];
   data: TData[];
 }
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-}: Props<TData, TValue>) {
+export function DataTable<TData>({ columns, data }: Props<TData>) {
   const table = useReactTable({
     columns,
     data,
@@ -33,24 +25,6 @@ export function DataTable<TData, TValue>({
   return (
     <div className="rounded-md border">
       <Table>
-        {/* <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader> */}
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
@@ -59,7 +33,10 @@ export function DataTable<TData, TValue>({
                 data-state={row.getIsSelected() && 'selected'}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell
+                    key={cell.id}
+                    className={`w-[${cell.column.getSize()}px]`}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
