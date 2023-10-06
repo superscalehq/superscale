@@ -77,6 +77,13 @@ export const columns = [
           </div>
         );
       },
+      filterFn(row, columnId, value) {
+        const v = row.getValue(columnId) as { email: string; name?: string };
+        return (
+          v.email.toLowerCase().includes(value) ||
+          !!v.name?.toLowerCase().includes(value)
+        );
+      },
     }
   ),
   columnHelper.accessor((row) => roleMap[row.role], {
