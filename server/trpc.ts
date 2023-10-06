@@ -1,9 +1,13 @@
+import { prisma } from '@/lib/db';
+import { Organization } from '@prisma/client';
 import { TRPCError, initTRPC } from '@trpc/server';
 import { type Session } from 'next-auth';
 import superjson from 'superjson';
+import { z } from 'zod';
 
 export type TRPCContext = {
   session: Session | null;
+  organization: Organization | null;
 };
 
 const t = initTRPC.context<TRPCContext>().create({
@@ -24,3 +28,63 @@ const authMiddleware = t.middleware(async ({ ctx, next }) => {
 });
 
 export const protectedProcedure = t.procedure.use(authMiddleware);
+
+const Organization = z
+  .object({
+    organizationId: z.string(),
+    organizationName: z.string(),
+  })
+  .partial()
+  .refine(({ organizationId, organizationName }) => {
+    if (!organizationId || !organizationName) {
+      throw new Error('Either organizationId or organizationName is required');
+    }
+    return true;
+  });
+
+export const memberProcedure = protectedProcedure
+  .input(Organization)
+  .use(async ({ next, ctx, input, ...rest }) => {
+    const { organizationId, organizationName } = input;
+    const { user } = ctx.session;
+    const organization = await prisma.organization.findFirst({
+      where: {
+        OR: [{ id: organizationId }, { name: organizationName }],
+        members: {
+          some: {
+            userId: user.id,
+          },
+        },
+      },
+      include: {
+        members: true,
+      },
+    });
+    if (!organization) throw new TRPCError({ code: 'UNAUTHORIZED' });
+
+    return next({ ...rest, ctx: { ...ctx, organization } });
+  });
+
+export const adminProcedure = protectedProcedure
+  .input(Organization)
+  .use(async ({ next, ctx, input, ...rest }) => {
+    const { organizationId, organizationName } = input;
+    const { user } = ctx.session;
+    const organization = await prisma.organization.findFirst({
+      where: {
+        OR: [{ id: organizationId }, { name: organizationName }],
+        members: {
+          some: {
+            userId: user.id,
+            role: 'ADMIN',
+          },
+        },
+      },
+      include: {
+        members: true,
+      },
+    });
+    if (!organization) throw new TRPCError({ code: 'UNAUTHORIZED' });
+
+    return next({ ...rest, ctx: { ...ctx, organization } });
+  });
