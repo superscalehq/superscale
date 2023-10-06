@@ -2,8 +2,8 @@ import * as invitationCrud from '@/crud/invitation';
 import * as organizationCrud from '@/crud/organization';
 import * as userCrud from '@/crud/user';
 import * as emails from '@/lib/email';
-import { protectedProcedure, router } from '@/server/trpc';
-import { OrganizationRole, UserInvitation } from '@prisma/client';
+import { adminProcedure, protectedProcedure, router } from '@/server/trpc';
+import { OrganizationRole } from '@prisma/client';
 import { z } from 'zod';
 
 const createOrganizationSchema = z.object({
@@ -23,7 +23,7 @@ const inviteSchema = z.object({
   role: z.enum([OrganizationRole.ADMIN, OrganizationRole.MEMBER]),
 });
 
-const invite = protectedProcedure
+const invite = adminProcedure
   .input(inviteSchema)
   .mutation(async ({ ctx, input }) => {
     console.log('input: ', input);
@@ -57,7 +57,7 @@ const acceptInvitation = protectedProcedure
 
 const revokeInvitationSchema = acceptInvitationSchema;
 
-const revokeInvitation = protectedProcedure
+const revokeInvitation = adminProcedure
   .input(revokeInvitationSchema)
   .mutation(async ({ ctx, input }) => {
     const { invitationId } = input;
@@ -65,7 +65,7 @@ const revokeInvitation = protectedProcedure
   });
 
 const resendInvitationSchema = acceptInvitationSchema;
-const resendInvitation = protectedProcedure
+const resendInvitation = adminProcedure
   .input(resendInvitationSchema)
   .mutation(async ({ ctx, input }) => {
     const { invitationId } = input;
@@ -78,6 +78,18 @@ const resendInvitation = protectedProcedure
       invitation,
       invitation.email
     );
+  });
+
+const removeMemberSchema = z.object({
+  organizationId: z.string(),
+  userId: z.string(),
+});
+const removeMember = adminProcedure
+  .input(removeMemberSchema)
+  .mutation(async ({ ctx, input }) => {
+    const { organizationId, userId } = input;
+    await organizationCrud.removeMember(organizationId, userId);
+    console.log('removed member: ', userId);
   });
 
 async function sendInvitationEmail(
@@ -103,6 +115,7 @@ async function sendInvitationEmail(
 
 export default router({
   create: createOrgHandler,
+  removeMember,
   invite,
   acceptInvitation,
   revokeInvitation,

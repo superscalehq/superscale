@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/db';
-import { Organization } from '@prisma/client';
+import { Organization as OrganizationInput } from '@prisma/client';
 import { TRPCError, initTRPC } from '@trpc/server';
 import { type Session } from 'next-auth';
 import superjson from 'superjson';
@@ -7,7 +7,7 @@ import { z } from 'zod';
 
 export type TRPCContext = {
   session: Session | null;
-  organization: Organization | null;
+  organization: OrganizationInput | null;
 };
 
 const t = initTRPC.context<TRPCContext>().create({
@@ -29,21 +29,21 @@ const authMiddleware = t.middleware(async ({ ctx, next }) => {
 
 export const protectedProcedure = t.procedure.use(authMiddleware);
 
-const Organization = z
+const OrganizationInput = z
   .object({
     organizationId: z.string(),
     organizationName: z.string(),
   })
   .partial()
   .refine(({ organizationId, organizationName }) => {
-    if (!organizationId || !organizationName) {
+    if (!organizationId && !organizationName) {
       throw new Error('Either organizationId or organizationName is required');
     }
     return true;
   });
 
 export const memberProcedure = protectedProcedure
-  .input(Organization)
+  .input(OrganizationInput)
   .use(async ({ next, ctx, input, ...rest }) => {
     const { organizationId, organizationName } = input;
     const { user } = ctx.session;
@@ -66,7 +66,7 @@ export const memberProcedure = protectedProcedure
   });
 
 export const adminProcedure = protectedProcedure
-  .input(Organization)
+  .input(OrganizationInput)
   .use(async ({ next, ctx, input, ...rest }) => {
     const { organizationId, organizationName } = input;
     const { user } = ctx.session;

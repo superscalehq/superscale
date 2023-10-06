@@ -11,7 +11,7 @@ function handler(req: NextRequest) {
     router,
     createContext: async () => {
       const session = await getServerSession(authOptions);
-      return { session };
+      return { session, organization: null };
     },
   });
 }

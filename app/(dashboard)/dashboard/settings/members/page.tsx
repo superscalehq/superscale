@@ -6,10 +6,12 @@ import { InvitationForm } from './invitation-form';
 import { DashboardHeader } from '@/components/header';
 import * as invitationCrud from '@/crud/invitation';
 import * as organizationCrud from '@/crud/organization';
+import { UserWithMemberships } from '@/crud/user';
 import { DataTable } from './tables';
 import { RowData, columns } from './tables/columns';
 
-async function fetchData(organizationId: string) {
+async function fetchData(user: UserWithMemberships) {
+  const organizationId = user.memberships[0].organization.id;
   const [members, invitations] = await Promise.all([
     organizationCrud.members(organizationId),
     invitationCrud.listByOrganization(organizationId),
@@ -19,6 +21,7 @@ async function fetchData(organizationId: string) {
   for (const member of members ?? []) {
     data.push({
       type: 'member',
+      userId: member.userId,
       name: member.user.name!!,
       email: member.user.email!!,
       role: member.role,
@@ -41,14 +44,13 @@ export default async function MembersPage() {
   if (!user) {
     redirect('/auth/sign-in');
   }
-  const data = await fetchData(user.memberships[0].organization.id);
-
+  const data = await fetchData(user);
   return (
     <div className="flex flex-col">
       <DashboardHeader heading="Team" text="Manage your team here." />
       <Separator className="mb-4 mt-6" />
       <InvitationForm user={user} />
-      <DataTable data={data} columns={columns} />
+      <DataTable user={user} data={data} />
     </div>
   );
 }

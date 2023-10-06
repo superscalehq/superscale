@@ -47,3 +47,12 @@ export async function members(organizationId: string) {
     include: { user: { include: { accounts: true } } },
   });
 }
+
+export async function removeMember(organizationId: string, userId: string) {
+  return await prisma.organizationMembership.deleteMany({
+    where: {
+      organizationId,
+      userId,
+    },
+  });
+}

@@ -2,28 +2,30 @@
 
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { UserWithMemberships } from '@/crud/user';
 import {
-  ColumnDef,
   ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useState } from 'react';
 import { SearchIcon } from 'lucide-react';
+import { useState } from 'react';
+import { columns } from './columns';
 
 interface Props<TData> {
   // See https://github.com/TanStack/table/issues/4382
   // The type of the columnDef is not inferred correctly.
-  columns: ColumnDef<TData, any>[];
   data: TData[];
+  user: UserWithMemberships;
 }
 
-export function DataTable<TData>({ columns, data }: Props<TData>) {
+export function DataTable<TData>({ data, user }: Props<TData>) {
+  const c = columns(user, user.memberships[0].organizationId);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({
-    columns,
+    columns: c,
     data,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),

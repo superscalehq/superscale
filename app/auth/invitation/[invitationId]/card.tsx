@@ -14,7 +14,7 @@ interface Props {
 export function InvitationCard({ invitation, user }: Props) {
   const router = useRouter();
   const acceptInvitation = t.organization.acceptInvitation.useMutation();
-  const isRightUser = ;
+  const isRightUser = invitation.email === user?.email;
   const handleClick = async () => {
     // The user is signed in to the correct account, but has not yet accepted the invitation.
     if (isRightUser) {
