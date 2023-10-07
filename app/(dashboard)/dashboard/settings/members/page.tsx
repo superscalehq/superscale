@@ -8,10 +8,12 @@ import * as invitationCrud from '@/crud/invitation';
 import * as organizationCrud from '@/crud/organization';
 import { UserWithMemberships } from '@/crud/user';
 import { DataTable } from './tables';
-import { RowData, columns } from './tables/columns';
+import { RowData } from './tables/columns';
 
 async function fetchData(user: UserWithMemberships) {
-  const organizationId = user.memberships[0].organization.id;
+  const {
+    organization: { id: organizationId },
+  } = user.memberships[0];
   const [members, invitations] = await Promise.all([
     organizationCrud.members(organizationId),
     invitationCrud.listByOrganization(organizationId),
@@ -44,13 +46,14 @@ export default async function MembersPage() {
   if (!user) {
     redirect('/auth/sign-in');
   }
+  const { organization } = user.memberships[0];
   const data = await fetchData(user);
   return (
     <div className="flex flex-col">
       <DashboardHeader heading="Team" text="Manage your team here." />
       <Separator className="mb-4 mt-6" />
       <InvitationForm user={user} />
-      <DataTable user={user} data={data} />
+      <DataTable user={user} organization={organization} data={data} />
     </div>
   );
 }

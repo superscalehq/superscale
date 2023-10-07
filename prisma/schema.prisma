@@ -89,6 +89,8 @@ model OrganizationMembership {
   organization   Organization     @relation(fields: [organizationId], references: [id])
   organizationId String
   role           OrganizationRole
+
+  @@unique([userId, organizationId])
 }
 
 // OrganizationRole is used for RBAC for Organization operations.

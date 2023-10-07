@@ -49,10 +49,12 @@ export async function members(organizationId: string) {
 }
 
 export async function removeMember(organizationId: string, userId: string) {
-  return await prisma.organizationMembership.deleteMany({
+  return await prisma.organizationMembership.delete({
     where: {
-      organizationId,
-      userId,
+      userId_organizationId: {
+        userId,
+        organizationId,
+      },
     },
   });
 }

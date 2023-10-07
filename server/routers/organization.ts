@@ -4,6 +4,7 @@ import * as userCrud from '@/crud/user';
 import * as emails from '@/lib/email';
 import { adminProcedure, protectedProcedure, router } from '@/server/trpc';
 import { OrganizationRole } from '@prisma/client';
+import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 const createOrganizationSchema = z.object({
@@ -88,8 +89,13 @@ const removeMember = adminProcedure
   .input(removeMemberSchema)
   .mutation(async ({ ctx, input }) => {
     const { organizationId, userId } = input;
+    if (userId === ctx.session.user.id) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'You cannot remove yourself from the organization',
+      });
+    }
     await organizationCrud.removeMember(organizationId, userId);
-    console.log('removed member: ', userId);
   });
 
 async function sendInvitationEmail(

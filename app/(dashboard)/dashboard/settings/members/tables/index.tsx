@@ -3,6 +3,7 @@
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { UserWithMemberships } from '@/crud/user';
+import { Organization } from '@prisma/client';
 import {
   ColumnFiltersState,
   flexRender,
@@ -12,24 +13,29 @@ import {
 } from '@tanstack/react-table';
 import { SearchIcon } from 'lucide-react';
 import { useState } from 'react';
-import { columns } from './columns';
+import { RowData, columns } from './columns';
 
 interface Props<TData> {
   // See https://github.com/TanStack/table/issues/4382
   // The type of the columnDef is not inferred correctly.
   data: TData[];
   user: UserWithMemberships;
+  organization: Organization;
 }
 
-export function DataTable<TData>({ data, user }: Props<TData>) {
-  const c = columns(user, user.memberships[0].organizationId);
+export function DataTable<TData extends RowData>({
+  data,
+  user,
+  organization,
+}: Props<TData>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({
-    columns: c,
+    columns,
     data,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnFiltersChange: setColumnFilters,
+    meta: { user, organization },
     state: { columnFilters },
   });
 
