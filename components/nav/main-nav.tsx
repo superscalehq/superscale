@@ -4,7 +4,7 @@ import { Icons } from '@/components/icons';
 import cn from 'classnames';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSelectedLayoutSegment } from 'next/navigation';
+import { useParams, useSelectedLayoutSegment } from 'next/navigation';
 import { useState } from 'react';
 import { MobileNav } from './mobile-nav';
 import { NavItem } from './types';
@@ -13,8 +13,13 @@ interface NavProps {
   items: NavItem[];
 }
 
-export function MainNav({ items }: NavProps) {
+export function MainNav(props: NavProps) {
   const segment = useSelectedLayoutSegment();
+  const { organization } = useParams();
+  const items = props.items.map((item) => ({
+    ...item,
+    href: `/${organization}${item.href}`,
+  }));
   const [open, setOpen] = useState(false);
 
   return (
@@ -29,7 +34,7 @@ export function MainNav({ items }: NavProps) {
             <Link
               className={cn(
                 'flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm',
-                item.href.startsWith(`/${segment}`)
+                item.href.startsWith(`/${organization}/${segment}`)
                   ? 'text-foreground'
                   : 'text-foreground/60',
                 item.disabled && 'cursor-not-allowed opacity-80'

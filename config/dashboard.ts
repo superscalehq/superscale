@@ -5,10 +5,10 @@ export const dashboardConfig: DashboardConfig = {
     { name: 'Contacts', href: '/contacts' },
     { name: 'Email', href: '/email' },
     { name: 'SEO', href: '/seo' },
-    { name: 'Settings', href: '/dashboard/settings' },
+    { name: 'Settings', href: '/settings' },
   ],
   settingsNav: [
-    { name: 'General', href: '/dashboard/settings', icon: 'home' },
-    { name: 'Members', href: '/dashboard/settings/members', icon: 'user' },
+    { name: 'General', href: '/settings', icon: 'home' },
+    { name: 'Members', href: '/settings/members', icon: 'user' },
   ],
 };

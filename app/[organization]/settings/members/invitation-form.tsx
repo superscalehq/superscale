@@ -20,8 +20,7 @@ import {
 import { UserWithMemberships } from '@/crud/user';
 import { t } from '@/lib/trpc';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { OrganizationRole } from '@prisma/client';
-import { redirect } from 'next/navigation';
+import { Organization, OrganizationRole } from '@prisma/client';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -33,9 +32,10 @@ const formSchema = z.object({
 
 interface Props {
   user: UserWithMemberships;
+  organization: Organization;
 }
 
-export function InvitationForm({ user }: Props) {
+export function InvitationForm({ organization }: Props) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,13 +44,6 @@ export function InvitationForm({ user }: Props) {
     },
   });
   const [loading, setLoading] = useState(false);
-  // TODO: this should be derived from a slug, preferably
-  const [membership] = user.memberships ?? [];
-  // it's not supposed to be possible to get here without belonging to an organization.
-  if (!membership) {
-    redirect('/onboarding');
-  }
-
   const invite = t.organization.invite.useMutation();
   const submit = form.handleSubmit(async ({ email, role }) => {
     try {
@@ -58,7 +51,7 @@ export function InvitationForm({ user }: Props) {
       await invite.mutateAsync({
         email,
         role,
-        organizationId: membership.organizationId,
+        organizationId: organization.id,
       });
     } catch (err) {
       console.error('Error inviting user: ', err);

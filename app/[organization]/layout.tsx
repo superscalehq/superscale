@@ -2,21 +2,33 @@ import { AccountNav } from '@/components/nav/account-nav';
 import { MainNav } from '@/components/nav/main-nav';
 import { dashboardConfig } from '@/config/dashboard';
 import { getCurrentUser } from '@/lib/auth/session';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
+
+interface Props {
+  children: React.ReactNode;
+  params: { organization: string };
+}
 
 export default async function DashboardLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+  params: { organization },
+}: Props) {
   const user = await getCurrentUser();
-
   if (!user) {
     redirect('/auth/sign-in');
   }
 
   if (!user.name || user.memberships.length === 0) {
     redirect('/onboarding');
+  }
+
+  if (
+    !user.memberships.some(
+      (membership) =>
+        membership.organization.slug === organization.toLowerCase()
+    )
+  ) {
+    notFound();
   }
 
   return (

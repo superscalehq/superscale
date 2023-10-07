@@ -1,9 +1,19 @@
 import { prisma } from '@/lib/db';
 import { OrganizationRole, Prisma } from '@prisma/client';
 
+export type OrganizationWithMembers = Prisma.PromiseReturnType<
+  typeof getBySlug
+>;
+
+export async function getBySlug(slug: string) {
+  return await prisma.organization.findUniqueOrThrow({
+    where: { slug },
+    include: { members: { include: { user: true } } },
+  });
+}
+
 /**
  * Creates a new organization and adds the user as an admin.
-
  * @param organizationName
  * @param userId
  * @returns
@@ -12,6 +22,7 @@ export async function create(organizationName: string, userId: string) {
   const organization = await prisma.organization.create({
     data: {
       name: organizationName,
+      slug: organizationName.toLowerCase().replace(/\s/g, '-'),
       members: {
         create: {
           role: OrganizationRole.ADMIN,

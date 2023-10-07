@@ -3,15 +3,20 @@
 import { Icons } from '@/components/icons';
 import cn from 'classnames';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { SidebarNavItem } from './types';
 
 interface Props {
   items: SidebarNavItem[];
 }
 
-export function SideNav({ items }: Props) {
+export function SideNav(props: Props) {
   const path = usePathname();
+  const { organization } = useParams();
+  const items = props.items.map((item) => ({
+    ...item,
+    href: `/${organization}${item.href}`,
+  }));
 
   return (
     <nav className="grid items-start gap-2">
