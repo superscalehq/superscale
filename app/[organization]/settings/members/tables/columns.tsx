@@ -43,12 +43,6 @@ export type RowData = MemberRowData | InvitationRowData;
 
 const columnHelper = createColumnHelper<RowData>();
 
-const roleMap: Record<OrganizationRole, string> = {
-  [OrganizationRole.OWNER]: 'Owner',
-  [OrganizationRole.ADMIN]: 'Admin',
-  [OrganizationRole.MEMBER]: 'Member',
-};
-
 export const columns = [
   columnHelper.display({
     id: 'image',
@@ -136,7 +130,7 @@ export const columns = [
               value={props.row.original.role}
               disabled={
                 props.row.original.role === OrganizationRole.OWNER ||
-                organizationRole !== OrganizationRole.ADMIN
+                organizationRole === OrganizationRole.MEMBER
               }
             >
               <SelectTrigger>

@@ -25,7 +25,7 @@ export async function create(organizationName: string, userId: string) {
       slug: organizationName.toLowerCase().replace(/\s/g, '-'),
       members: {
         create: {
-          role: OrganizationRole.ADMIN,
+          role: OrganizationRole.OWNER,
           user: {
             connect: {
               id: userId,
