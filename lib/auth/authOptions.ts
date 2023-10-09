@@ -1,11 +1,10 @@
+import { serverConfig } from '@/lib/config';
 import { prisma } from '@/lib/db';
-import { resend } from '@/lib/email';
+import * as emails from '@/lib/email';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { NextAuthOptions } from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
 import GoogleProvider, { GoogleProfile } from 'next-auth/providers/google';
-import MagicLinkEmail from '../../emails/magic-link';
-import { serverConfig } from '../config';
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -26,12 +25,13 @@ export const authOptions: NextAuthOptions = {
     EmailProvider({
       async sendVerificationRequest(params) {
         try {
-          await resend.emails.send({
-            from: 'no-reply@superscale.app',
-            to: params.identifier,
-            subject: 'Sign in to Superscale',
-            react: <MagicLinkEmail link={params.url} />,
-          });
+          emails.sendEmail(
+            'no-reply@superscale.app',
+            params.identifier,
+            'Sign in to Superscale',
+            'magicLink',
+            { link: params.url }
+          );
         } catch (error) {
           console.log({ error });
         }

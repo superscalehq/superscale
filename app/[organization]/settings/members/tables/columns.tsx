@@ -175,44 +175,56 @@ export const columns = [
       };
       const handleRevoke = async () => {
         const { invitationId } = row.original as InvitationRowData;
-        await revokeInvitation.mutateAsync({ invitationId });
+        await revokeInvitation.mutateAsync({
+          organizationId: organization.id,
+          invitationId,
+        });
         toast({ title: 'Invitation revoked' });
         router.refresh();
       };
       const handleResend = async () => {
         const { invitationId } = row.original as InvitationRowData;
-        await resendInvitation.mutateAsync({ invitationId });
+        await resendInvitation.mutateAsync({
+          organizationId: organization.id,
+          invitationId,
+        });
         toast({ title: 'Invitation resent' });
         router.refresh();
       };
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {row.original.type === 'member' ? (
-              <DropdownMenuItem
-                onClick={handleRemove}
-                disabled={
-                  organizationRole !== OrganizationRole.ADMIN ||
-                  currentUser.id === row.original.userId
-                }
-              >
-                Remove
-              </DropdownMenuItem>
-            ) : null}
-            {row.original.type === 'invitation' ? (
-              <DropdownMenuItem onClick={handleRevoke}>Revoke</DropdownMenuItem>
-            ) : null}
-            {row.original.type === 'invitation' ? (
-              <DropdownMenuItem onClick={handleResend}>Resend</DropdownMenuItem>
-            ) : null}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex w-full flex-row justify-end">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {row.original.type === 'member' ? (
+                <DropdownMenuItem
+                  onClick={handleRemove}
+                  disabled={
+                    organizationRole !== OrganizationRole.ADMIN ||
+                    currentUser.id === row.original.userId
+                  }
+                >
+                  Remove
+                </DropdownMenuItem>
+              ) : null}
+              {row.original.type === 'invitation' ? (
+                <DropdownMenuItem onClick={handleRevoke}>
+                  Revoke
+                </DropdownMenuItem>
+              ) : null}
+              {row.original.type === 'invitation' ? (
+                <DropdownMenuItem onClick={handleResend}>
+                  Resend
+                </DropdownMenuItem>
+              ) : null}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       );
     },
   }),

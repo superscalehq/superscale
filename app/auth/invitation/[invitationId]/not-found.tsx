@@ -1,11 +1,9 @@
-'use client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
 import { NotFoundLayout } from '@/components/layout/not-found';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Link from 'next/link';
 
-export default function InvitationNotFound() {
-  const router = useRouter();
+export default async function InvitationNotFound() {
   return (
     <NotFoundLayout>
       <Card className="flex flex-col items-center md:w-[450px]">
@@ -16,7 +14,9 @@ export default function InvitationNotFound() {
           <p className="text-sm text-foreground">
             Please contact the person who invited you to get a new invitation.
           </p>
-          <Button onClick={() => router.push('/')}>Back</Button>
+          <Button variant="ghost" asChild>
+            <Link href="/">Back</Link>
+          </Button>
         </CardContent>
       </Card>
     </NotFoundLayout>

@@ -17,10 +17,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useToast } from '@/components/ui/use-toast';
 import { UserWithMemberships } from '@/crud/user';
 import { t } from '@/lib/trpc';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Organization, OrganizationRole } from '@prisma/client';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -36,6 +38,7 @@ interface Props {
 }
 
 export function InvitationForm({ organization }: Props) {
+  const router = useRouter();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -45,6 +48,7 @@ export function InvitationForm({ organization }: Props) {
   });
   const [loading, setLoading] = useState(false);
   const invite = t.organization.invite.useMutation();
+  const { toast } = useToast();
   const submit = form.handleSubmit(async ({ email, role }) => {
     try {
       setLoading(true);
@@ -52,6 +56,12 @@ export function InvitationForm({ organization }: Props) {
         email,
         role,
         organizationId: organization.id,
+      });
+      router.refresh();
+      form.reset();
+      toast({
+        title: 'Invitation sent!',
+        description: `An invitation should have been sent to ${email}.`,
       });
     } catch (err) {
       console.error('Error inviting user: ', err);
