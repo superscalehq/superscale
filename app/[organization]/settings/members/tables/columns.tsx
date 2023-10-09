@@ -43,6 +43,12 @@ export type RowData = MemberRowData | InvitationRowData;
 
 const columnHelper = createColumnHelper<RowData>();
 
+const roleMap: Record<OrganizationRole, string> = {
+  [OrganizationRole.OWNER]: 'Owner',
+  [OrganizationRole.ADMIN]: 'Admin',
+  [OrganizationRole.MEMBER]: 'Member',
+};
+
 export const columns = [
   columnHelper.display({
     id: 'image',
@@ -91,6 +97,7 @@ export const columns = [
   ),
   columnHelper.accessor((row) => row.role, {
     id: 'role',
+    size: 100,
     cell(props) {
       const router = useRouter();
       const { toast } = useToast();
@@ -143,9 +150,14 @@ export const columns = [
             </Select>
           ) : null}
           {props.row.original.type === 'invitation' ? (
-            <span className="inline-block rounded border-[1px] border-muted-foreground px-2 py-0.5 text-xs text-muted-foreground">
-              Pending
-            </span>
+            <div className="inline-flex flex-row justify-center space-x-2">
+              <span className="inline-block rounded border-[1px] border-muted-foreground px-2 py-0.5 text-xs text-muted-foreground">
+                Pending
+              </span>
+              <span className="text-sm">
+                {roleMap[props.row.original.role]}
+              </span>
+            </div>
           ) : null}
         </div>
       );
