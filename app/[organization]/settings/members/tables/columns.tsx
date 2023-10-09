@@ -101,6 +101,10 @@ export const columns = [
       const router = useRouter();
       const { toast } = useToast();
       const updateRole = t.organization.updateMemberRole.useMutation();
+      const { user: currentUser, organization } = props.table.options.meta!!;
+      const organizationRole = currentUser.memberships.find(
+        (m) => m.organization.id === organization.id
+      )?.role;
       const handleChange = async (value: OrganizationRole) => {
         if (
           value === props.row.original.role ||
@@ -130,7 +134,10 @@ export const columns = [
               onValueChange={handleChange}
               defaultValue={props.row.original.role}
               value={props.row.original.role}
-              disabled={props.row.original.role === OrganizationRole.OWNER}
+              disabled={
+                props.row.original.role === OrganizationRole.OWNER ||
+                organizationRole !== OrganizationRole.ADMIN
+              }
             >
               <SelectTrigger>
                 <SelectValue placeholder="Choose a role." />
