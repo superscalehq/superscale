@@ -76,7 +76,7 @@ export const adminProcedure = protectedProcedure
         members: {
           some: {
             userId: user.id,
-            role: 'ADMIN',
+            role: { in: ['ADMIN', 'OWNER'] },
           },
         },
       },

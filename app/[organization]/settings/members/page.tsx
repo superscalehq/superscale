@@ -56,6 +56,7 @@ export default async function MembersPage({
       <DashboardHeader heading="Team" text="Manage your team here." />
       <Separator className="mb-4 mt-6" />
       <InvitationForm user={user} organization={organization} />
+      <Separator className="mb-8 mt-6" />
       <DataTable user={user} organization={organization} data={data} />
     </div>
   );

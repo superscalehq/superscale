@@ -71,10 +71,12 @@ export function InvitationForm({ organization }: Props) {
   });
 
   return (
-    <div className="mb-10">
+    <div className="mb-10 space-y-4">
       <div className="mt-4">
         <h3 className="text-lg font-medium">Invite a team member</h3>
-        <p className="text-md">Send an invitation to a team member</p>
+        <p className="text-sm text-muted-foreground">
+          Send an invitation to a team member
+        </p>
       </div>
       <Form {...form}>
         <form className="flex flex-row items-end space-x-4" onSubmit={submit}>
