@@ -59,13 +59,40 @@ export async function members(organizationId: string) {
   });
 }
 
+export async function getMemberById(organizationId: string, userId: string) {
+  return await prisma.organizationMembership.findUnique({
+    where: {
+      userId_organizationId: { organizationId, userId },
+    },
+  });
+}
+
+export async function getAdmins(organizationId: string) {
+  return await prisma.organizationMembership.findMany({
+    where: {
+      organizationId,
+      role: OrganizationRole.ADMIN,
+    },
+  });
+}
+
+export async function updateMemberRole(
+  organizationId: string,
+  userId: string,
+  role: OrganizationRole
+) {
+  return await prisma.organizationMembership.update({
+    where: {
+      userId_organizationId: { userId, organizationId },
+    },
+    data: { role },
+  });
+}
+
 export async function removeMember(organizationId: string, userId: string) {
   return await prisma.organizationMembership.delete({
     where: {
-      userId_organizationId: {
-        userId,
-        organizationId,
-      },
+      userId_organizationId: { userId, organizationId },
     },
   });
 }

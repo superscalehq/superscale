@@ -98,6 +98,48 @@ const removeMember = adminProcedure
     await organizationCrud.removeMember(organizationId, userId);
   });
 
+const updateMemberRoleSchema = z.object({
+  organizationId: z.string(),
+  userId: z.string(),
+  role: z.enum([OrganizationRole.ADMIN, OrganizationRole.MEMBER]),
+});
+const updateMemberRole = adminProcedure
+  .input(updateMemberRoleSchema)
+  .mutation(async ({ ctx, input }) => {
+    const { organizationId, userId, role } = input;
+    const member = await organizationCrud.getMemberById(organizationId, userId);
+    if (!member) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'User is not a member of this organization',
+      });
+    }
+
+    if (member.role === role) {
+      return;
+    }
+
+    if (member.role === OrganizationRole.OWNER) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Owners cannot change roles',
+      });
+    }
+
+    // downgrade admin to member, check that there is at least one admin left.
+    if (member.role === OrganizationRole.ADMIN) {
+      const admins = await organizationCrud.getAdmins(organizationId);
+      if (admins.length === 1) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Organization must have at least one admin',
+        });
+      }
+    }
+
+    await organizationCrud.updateMemberRole(organizationId, userId, role);
+  });
+
 async function sendInvitationEmail(
   senderUserId: string,
   invitation: NonNullable<invitationCrud.InvitationWithOrgAndInviter>,
@@ -122,6 +164,7 @@ async function sendInvitationEmail(
 export default router({
   create: createOrgHandler,
   removeMember,
+  updateMemberRole,
   invite,
   acceptInvitation,
   revokeInvitation,

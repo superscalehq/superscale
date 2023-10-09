@@ -8,8 +8,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useToast } from '@/components/ui/use-toast';
-import { UserWithMemberships } from '@/crud/user';
 import { t } from '@/lib/trpc';
 import { OrganizationRole } from '@prisma/client';
 import { createColumnHelper } from '@tanstack/react-table';
@@ -89,13 +95,52 @@ export const columns = [
       },
     }
   ),
-  columnHelper.accessor((row) => roleMap[row.role], {
+  columnHelper.accessor((row) => row.role, {
     id: 'role',
     cell(props) {
-      const v = props.cell.getValue();
+      const router = useRouter();
+      const { toast } = useToast();
+      const updateRole = t.organization.updateMemberRole.useMutation();
+      const handleChange = async (value: OrganizationRole) => {
+        if (
+          value === props.row.original.role ||
+          value === OrganizationRole.OWNER ||
+          props.row.original.type === 'invitation'
+        )
+          return;
+        try {
+          await updateRole.mutateAsync({
+            organizationId: props.table.options.meta!!.organization.id,
+            userId: props.row.original.userId,
+            role: value,
+          });
+          router.refresh();
+        } catch (err) {
+          toast({
+            title: 'Error updating role',
+            description: (err as Error).message,
+            variant: 'destructive',
+          });
+        }
+      };
       return (
         <div className="flex flex-row items-center space-x-4">
-          <p>{v}</p>
+          {props.row.original.type === 'member' ? (
+            <Select
+              onValueChange={handleChange}
+              defaultValue={props.row.original.role}
+              value={props.row.original.role}
+              disabled={props.row.original.role === OrganizationRole.OWNER}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Choose a role." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={OrganizationRole.ADMIN}>Admin</SelectItem>
+                <SelectItem value={OrganizationRole.MEMBER}>Member</SelectItem>
+              </SelectContent>
+            </Select>
+          ) : null}
           {props.row.original.type === 'invitation' ? (
             <span className="inline-block rounded border-[1px] border-muted-foreground px-2 py-0.5 text-xs text-muted-foreground">
               Pending
