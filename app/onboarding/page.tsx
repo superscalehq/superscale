@@ -20,7 +20,7 @@ export default async function OnboardingPage() {
   const user = await userCrud.getById(session.user.id);
 
   if (user.name && user.memberships.length > 0) {
-    return redirect('/dashboard');
+    return redirect(`/${user.memberships[0].organization.slug}`);
   }
 
   return (

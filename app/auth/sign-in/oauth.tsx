@@ -17,7 +17,7 @@ export default function Oauth({ invitationId }: Props) {
           signIn('google', {
             callbackUrl: invitationId
               ? `/auth/invitation/${invitationId}?accept=true`
-              : '/dashboard',
+              : '/',
           });
         }}
       >

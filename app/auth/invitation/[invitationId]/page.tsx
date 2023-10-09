@@ -21,7 +21,7 @@ export default async function AcceptInvitationPage({
   // In this case, the user was asked to sign in and redirected back here.
   if (accept && user && user.email === invitation.email) {
     await invitationCrud.accept(invitationId);
-    redirect('/dashboard');
+    redirect(`/${invitation.organization.slug}`);
   }
 
   return (

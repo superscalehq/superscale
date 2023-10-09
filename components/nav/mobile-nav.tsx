@@ -5,16 +5,19 @@ import { cn } from '@/lib/utils';
 import { useLockBodyScroll } from '@uidotdev/usehooks';
 import { NavItem } from './types';
 import { useEffect, useRef } from 'react';
+import { useParams } from 'next/navigation';
 
 interface MobileNavProps {
   items: NavItem[];
   onClose: () => void;
 }
 
-export function MobileNav({ items, onClose }: MobileNavProps) {
+export function MobileNav(props: MobileNavProps) {
   useLockBodyScroll();
 
   const containerRef = useRef<HTMLDivElement>(null); // <-- Create a ref
+
+  const { onClose } = props;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -31,6 +34,12 @@ export function MobileNav({ items, onClose }: MobileNavProps) {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [onClose]);
+
+  const { organization } = useParams();
+  const items = props.items.map((item) => ({
+    ...item,
+    href: `/${organization}${item.href}`,
+  }));
 
   return (
     <div

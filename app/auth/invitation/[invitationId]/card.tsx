@@ -19,7 +19,7 @@ export function InvitationCard({ invitation, user }: Props) {
     // The user is signed in to the correct account, but has not yet accepted the invitation.
     if (isRightUser) {
       await acceptInvitation.mutateAsync({ invitationId: invitation.id });
-      router.push('/dashboard');
+      router.push(`/${invitation.organization.slug}`);
       return;
     }
 

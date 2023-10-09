@@ -50,7 +50,7 @@ export default function SignInForm({
           redirect: false,
           callbackUrl: invitationId
             ? `/auth/invitation/${invitationId}?accept=true`
-            : '/dashboard',
+            : '/',
         },
         data
       );

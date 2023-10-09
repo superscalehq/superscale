@@ -13,12 +13,14 @@ import {
 } from '../ui/dropdown-menu';
 
 import { UserAvatar } from './user-avatar';
+import { useParams } from 'next/navigation';
 
 interface Props {
   user: User;
 }
 
 export function AccountNav({ user }: Props) {
+  const { organization } = useParams();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -40,13 +42,13 @@ export function AccountNav({ user }: Props) {
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/dashboard">Dashboard</Link>
+          <Link href={`/${organization}`}>Dashboard</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/dashboard/billing">Billing</Link>
+          <Link href={`/${organization}/billing`}>Billing</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/dashboard/settings">Settings</Link>
+          <Link href={`/${organization}/settings`}>Settings</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem

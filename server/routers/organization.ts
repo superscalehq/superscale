@@ -15,7 +15,7 @@ const createOrganizationSchema = z.object({
 const createOrgHandler = protectedProcedure
   .input(createOrganizationSchema)
   .mutation(async ({ ctx, input }) => {
-    await organizationCrud.create(input.organizationName, input.userId);
+    return await organizationCrud.create(input.organizationName, input.userId);
   });
 
 const inviteSchema = z.object({

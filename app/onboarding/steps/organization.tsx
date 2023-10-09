@@ -44,12 +44,12 @@ export default function OrganizationStep({ user, setLoading }: Props) {
     async ({ organization }: z.infer<typeof formSchema>) => {
       try {
         setLoading(true);
-        await createOrganization.mutateAsync({
+        const org = await createOrganization.mutateAsync({
           userId: user.id,
           organizationName: organization,
         });
         if (isLastStep) {
-          router.push('/dashboard');
+          router.push(`/${org.slug}`);
           return;
         }
         nextStep();
