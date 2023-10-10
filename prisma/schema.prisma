@@ -73,7 +73,7 @@ model Organization {
   updatedAt      DateTime                 @updatedAt
   deletedAt      DateTime?
   name           String                   @unique
-  slug           String?                  @unique
+  slug           String                   @unique
   members        OrganizationMembership[]
   UserInvitation UserInvitation[]
 }

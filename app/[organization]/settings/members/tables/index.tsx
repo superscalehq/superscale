@@ -23,7 +23,7 @@ interface Props<TData> {
   organization: Organization;
 }
 
-export function DataTable<TData extends RowData>({
+export function MembersTable<TData extends RowData>({
   data,
   user,
   organization,

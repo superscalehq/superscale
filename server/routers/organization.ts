@@ -11,11 +11,51 @@ const createOrganizationSchema = z.object({
   organizationName: z.string(),
   userId: z.string(),
 });
-
-const createOrgHandler = protectedProcedure
+const create = protectedProcedure
   .input(createOrganizationSchema)
   .mutation(async ({ ctx, input }) => {
     return await organizationCrud.create(input.organizationName, input.userId);
+  });
+
+const updateOrganizationSchema = z.object({
+  organizationId: z.string(),
+  name: z.string().optional(),
+  slug: z.string().optional(),
+});
+const update = adminProcedure
+  .input(updateOrganizationSchema)
+  .mutation(async ({ input }) => {
+    const { organizationId, name, slug } = input;
+    const organization = await organizationCrud.getById(organizationId);
+    if (!organization) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Organization not found',
+      });
+    }
+
+    if (!name && !slug) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Must provide at least one field to update',
+      });
+    }
+
+    if (organization.slug === slug && organization.id !== organizationId) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Slug is already taken',
+      });
+    }
+
+    if (organization.name === name && organization.id !== organizationId) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Name is already taken',
+      });
+    }
+
+    await organizationCrud.update(organizationId, name, slug);
   });
 
 const inviteSchema = z.object({
@@ -23,7 +63,6 @@ const inviteSchema = z.object({
   organizationId: z.string(),
   role: z.enum([OrganizationRole.ADMIN, OrganizationRole.MEMBER]),
 });
-
 const invite = adminProcedure
   .input(inviteSchema)
   .mutation(async ({ ctx, input }) => {
@@ -48,7 +87,6 @@ const invite = adminProcedure
 const acceptInvitationSchema = z.object({
   invitationId: z.string(),
 });
-
 const acceptInvitation = protectedProcedure
   .input(acceptInvitationSchema)
   .mutation(async ({ ctx, input }) => {
@@ -57,7 +95,6 @@ const acceptInvitation = protectedProcedure
   });
 
 const revokeInvitationSchema = acceptInvitationSchema;
-
 const revokeInvitation = adminProcedure
   .input(revokeInvitationSchema)
   .mutation(async ({ ctx, input }) => {
@@ -162,7 +199,8 @@ async function sendInvitationEmail(
 }
 
 export default router({
-  create: createOrgHandler,
+  create,
+  update,
   removeMember,
   updateMemberRole,
   invite,

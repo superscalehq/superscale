@@ -6,7 +6,7 @@ import { InvitationForm } from './invitation-form';
 import { DashboardHeader } from '@/components/header';
 import * as invitationCrud from '@/crud/invitation';
 import * as organizationCrud from '@/crud/organization';
-import { DataTable } from './tables';
+import { MembersTable } from './tables';
 import { RowData } from './tables/columns';
 
 async function fetchData(
@@ -57,7 +57,7 @@ export default async function MembersPage({
       <Separator className="mb-4 mt-6" />
       <InvitationForm user={user} organization={organization} />
       <Separator className="mb-8 mt-6" />
-      <DataTable user={user} organization={organization} data={data} />
+      <MembersTable user={user} organization={organization} data={data} />
     </div>
   );
 }

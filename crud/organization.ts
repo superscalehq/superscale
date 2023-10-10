@@ -12,6 +12,13 @@ export async function getBySlug(slug: string) {
   });
 }
 
+export async function getById(id: string) {
+  return await prisma.organization.findUniqueOrThrow({
+    where: { id },
+    include: { members: { include: { user: true } } },
+  });
+}
+
 /**
  * Creates a new organization and adds the user as an admin.
  * @param organizationName
@@ -36,6 +43,17 @@ export async function create(organizationName: string, userId: string) {
     },
   });
   return organization;
+}
+
+export async function update(
+  organizationId: string,
+  name?: string,
+  slug?: string
+) {
+  await prisma.organization.update({
+    where: { id: organizationId },
+    data: { name, slug },
+  });
 }
 
 const memberWithUser =
