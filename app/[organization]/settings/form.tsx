@@ -20,8 +20,11 @@ import { z } from 'zod';
 import cn from 'classnames';
 import { useToast } from '@/components/ui/use-toast';
 import { TRPCClientError } from '@trpc/client';
+import { UserWithMemberships } from '@/crud/user';
+import { OrganizationRole } from '@prisma/client';
 
 interface Props {
+  user: UserWithMemberships;
   organization: OrganizationWithMembers;
 }
 
@@ -30,7 +33,7 @@ const formSchema = z.object({
   slug: z.string().min(1).max(50),
 });
 
-export function OrganizationSettingsForm({ organization }: Props) {
+export function OrganizationSettingsForm({ user, organization }: Props) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -65,7 +68,9 @@ export function OrganizationSettingsForm({ organization }: Props) {
       setLoading(false);
     }
   });
-
+  const isOwner =
+    user.memberships.find((m) => m.organization.id === organization.id)
+      ?.role === OrganizationRole.OWNER;
   const prefixRef = useRef<HTMLDivElement>(null);
   const [spanWidth, setSpanWidth] = useState(0);
   useEffect(() => {
@@ -88,7 +93,12 @@ export function OrganizationSettingsForm({ organization }: Props) {
               <FormItem className="md:w-auto">
                 <FormLabel>Organization Name</FormLabel>
                 <FormControl>
-                  <Input className="w-72" type="text" {...field} />
+                  <Input
+                    disabled={!isOwner}
+                    className="w-72"
+                    type="text"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -111,6 +121,7 @@ export function OrganizationSettingsForm({ organization }: Props) {
                       </span>
                     </div>
                     <Input
+                      disabled={!isOwner}
                       className="py-[9px]"
                       style={{ paddingLeft: `calc(${spanWidth}px + 0.75rem)` }}
                       type="text"

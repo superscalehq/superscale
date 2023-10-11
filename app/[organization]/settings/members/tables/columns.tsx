@@ -144,8 +144,15 @@ export const columns = [
                 <SelectValue placeholder="Choose a role." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={OrganizationRole.ADMIN}>Admin</SelectItem>
-                <SelectItem value={OrganizationRole.MEMBER}>Member</SelectItem>
+                <SelectItem value={OrganizationRole.OWNER}>
+                  {roleMap[OrganizationRole.OWNER]}
+                </SelectItem>
+                <SelectItem value={OrganizationRole.ADMIN}>
+                  {roleMap[OrganizationRole.ADMIN]}
+                </SelectItem>
+                <SelectItem value={OrganizationRole.MEMBER}>
+                  {roleMap[OrganizationRole.MEMBER]}
+                </SelectItem>
               </SelectContent>
             </Select>
           ) : null}
