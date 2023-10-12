@@ -122,11 +122,11 @@ export async function getMemberById(organizationId: string, userId: string) {
   });
 }
 
-export async function getAdmins(organizationId: string) {
+export async function getMembersByRole(orgId: string, role: OrganizationRole) {
   return await prisma.organizationMembership.findMany({
     where: {
-      organizationId,
-      role: OrganizationRole.ADMIN,
+      organizationId: orgId,
+      role,
     },
   });
 }
@@ -144,7 +144,16 @@ export async function updateMemberRole(
   });
 }
 
-export async function removeMember(organizationId: string, userId: string) {
+export async function removeMember(
+  organizationId: string,
+  userId: string,
+  hardDelete = false
+) {
+  // Soft delete middleware doesn't support hard deleting, so we have to use raw SQL
+  if (hardDelete) {
+    return await prisma.$executeRaw`DELETE FROM "OrganizationMembership" WHERE "userId" = ${userId} AND "organizationId" = ${organizationId}`;
+  }
+
   return await prisma.organizationMembership.delete({
     where: {
       userId_organizationId: { userId, organizationId },

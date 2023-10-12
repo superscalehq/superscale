@@ -1,6 +1,7 @@
 import * as invitationCrud from '@/crud/invitation';
 import * as organizationCrud from '@/crud/organization';
 import * as userCrud from '@/crud/user';
+import { getRole } from '@/lib/auth/authn';
 import * as emails from '@/lib/email';
 import { adminProcedure, protectedProcedure, router } from '@/server/trpc';
 import { OrganizationRole } from '@prisma/client';
@@ -157,12 +158,16 @@ const removeMember = adminProcedure
 const updateMemberRoleSchema = z.object({
   organizationId: z.string(),
   userId: z.string(),
-  role: z.enum([OrganizationRole.ADMIN, OrganizationRole.MEMBER]),
+  role: z.enum([
+    OrganizationRole.OWNER,
+    OrganizationRole.ADMIN,
+    OrganizationRole.MEMBER,
+  ]),
 });
 const updateMemberRole = adminProcedure
   .input(updateMemberRoleSchema)
   .mutation(async ({ ctx, input }) => {
-    const { organizationId, userId, role } = input;
+    const { organizationId, userId, role: targetRole } = input;
     const member = await organizationCrud.getMemberById(organizationId, userId);
     if (!member) {
       throw new TRPCError({
@@ -171,29 +176,79 @@ const updateMemberRole = adminProcedure
       });
     }
 
-    if (member.role === role) {
+    if (member.role === targetRole) {
       return;
     }
 
-    if (member.role === OrganizationRole.OWNER) {
+    const currentUser = await userCrud.getById(ctx.session.user.id);
+    const currentUserRole = getRole(currentUser, organizationId);
+
+    // admins cannot change the role of owners
+    if (
+      currentUserRole === OrganizationRole.ADMIN &&
+      (member.role === OrganizationRole.OWNER ||
+        targetRole === OrganizationRole.OWNER)
+    ) {
       throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: 'Owners cannot change roles',
+        code: 'UNAUTHORIZED',
+        message: 'Admins cannot change the role of owners',
       });
     }
 
-    // downgrade admin to member, check that there is at least one admin left.
-    if (member.role === OrganizationRole.ADMIN) {
-      const admins = await organizationCrud.getAdmins(organizationId);
-      if (admins.length === 1) {
+    // if the downgrading from owner to non-owner, ensure there is at least one owner left
+    if (
+      member.role === OrganizationRole.OWNER &&
+      targetRole !== OrganizationRole.OWNER
+    ) {
+      const owners = await organizationCrud.getMembersByRole(
+        organizationId,
+        OrganizationRole.OWNER
+      );
+      if (owners.length === 1) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
-          message: 'Organization must have at least one admin',
+          message: 'Organization must have at least one owner',
         });
       }
     }
 
-    await organizationCrud.updateMemberRole(organizationId, userId, role);
+    await organizationCrud.updateMemberRole(organizationId, userId, targetRole);
+  });
+
+const leaveOrganizationSchema = z.object({
+  organizationId: z.string(),
+});
+const leaveOrganization = protectedProcedure
+  .input(leaveOrganizationSchema)
+  .mutation(async ({ ctx, input }) => {
+    const { organizationId } = input;
+    const membership = await organizationCrud.getMemberById(
+      organizationId,
+      ctx.session.user.id
+    );
+    if (!membership) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'User is not a member of this organization',
+      });
+    }
+    if (membership.role === OrganizationRole.OWNER) {
+      const owners = await organizationCrud.getMembersByRole(
+        organizationId,
+        OrganizationRole.OWNER
+      );
+      if (owners.length === 1) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Sole Owner cannot leave an organization',
+        });
+      }
+    }
+    await organizationCrud.removeMember(
+      organizationId,
+      ctx.session.user.id,
+      true
+    );
   });
 
 async function sendInvitationEmail(
@@ -224,6 +279,7 @@ export default router({
   softDelete,
   removeMember,
   updateMemberRole,
+  leaveOrganization,
   invite,
   acceptInvitation,
   revokeInvitation,

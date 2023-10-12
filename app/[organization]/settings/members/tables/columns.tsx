@@ -1,5 +1,4 @@
 'use client';
-
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,6 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/components/ui/use-toast';
+import { canRemove, getRole } from '@/lib/auth/authn';
 import { t } from '@/lib/trpc';
 import { OrganizationRole } from '@prisma/client';
 import { createColumnHelper } from '@tanstack/react-table';
@@ -144,7 +144,10 @@ export const columns = [
                 <SelectValue placeholder="Choose a role." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={OrganizationRole.OWNER}>
+                <SelectItem
+                  disabled={organizationRole !== OrganizationRole.OWNER}
+                  value={OrganizationRole.OWNER}
+                >
                   {roleMap[OrganizationRole.OWNER]}
                 </SelectItem>
                 <SelectItem value={OrganizationRole.ADMIN}>
@@ -176,10 +179,9 @@ export const columns = [
     cell(props) {
       const row = props.row;
       const { user: currentUser, organization } = props.table.options.meta!!;
-      const organizationRole = currentUser.memberships.find(
-        (m) => m.organization.id === organization.id
-      )?.role;
+      const organizationRole = getRole(currentUser, organization.id);
       const removeMember = t.organization.removeMember.useMutation();
+      const leaveOrganization = t.organization.leaveOrganization.useMutation();
       const revokeInvitation = t.organization.revokeInvitation.useMutation();
       const resendInvitation = t.organization.resendInvitation.useMutation();
       const router = useRouter();
@@ -192,6 +194,12 @@ export const columns = [
         });
         toast({ title: 'Member removed' });
         router.refresh();
+      };
+      const handleLeave = async () => {
+        await leaveOrganization.mutateAsync({
+          organizationId: organization.id,
+        });
+        router.replace('/');
       };
       const handleRevoke = async () => {
         const { invitationId } = row.original as InvitationRowData;
@@ -221,15 +229,23 @@ export const columns = [
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {row.original.type === 'member' ? (
+              {row.original.type === 'member' &&
+              currentUser.id !== row.original.userId ? (
                 <DropdownMenuItem
                   onClick={handleRemove}
-                  disabled={
-                    organizationRole !== OrganizationRole.ADMIN ||
-                    currentUser.id === row.original.userId
-                  }
+                  disabled={!canRemove(organizationRole, row.original.role)}
                 >
                   Remove
+                </DropdownMenuItem>
+              ) : null}
+              {row.original.type === 'member' &&
+              currentUser.id === row.original.userId ? (
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={handleLeave}
+                  disabled={row.original.role === OrganizationRole.OWNER}
+                >
+                  Leave
                 </DropdownMenuItem>
               ) : null}
               {row.original.type === 'invitation' ? (
