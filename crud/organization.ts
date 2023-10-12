@@ -38,13 +38,19 @@ export async function getBySlug(slug: string) {
   });
 }
 
-export async function exists(name: string) {
+/**
+ * Checks if an organization exists by name or slug. Includes soft deleted records.
+ * @param nameOrSlug
+ * @returns
+ */
+export async function exists(nameOrSlug: string) {
+  const filter = { OR: [{ name: nameOrSlug }, { slug: nameOrSlug }] };
   const [active, deleted] = await Promise.all([
     prisma.organization.count({
-      where: { name, deletedAt: { not: null } },
+      where: { ...filter, deletedAt: { not: null } },
     }),
     prisma.organization.count({
-      where: { name },
+      where: filter,
     }),
   ]);
   return active + deleted > 0;

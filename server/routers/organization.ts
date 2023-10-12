@@ -8,13 +8,13 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 const existsSchema = z.object({
-  name: z.string(),
+  nameOrSlug: z.string(),
 });
 const exists = protectedProcedure
   .input(existsSchema)
   .query(async ({ input }) => {
-    const { name } = input;
-    return await organizationCrud.exists(name);
+    const { nameOrSlug } = input;
+    return await organizationCrud.exists(nameOrSlug);
   });
 
 const createOrganizationSchema = z.object({

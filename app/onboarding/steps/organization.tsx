@@ -27,7 +27,7 @@ const formSchema = z.object({
     .refine(
       async (name) => {
         const exists = await trpcProxyClient.organization.exists.query({
-          name,
+          nameOrSlug: name,
         });
         return !exists;
       },

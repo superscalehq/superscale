@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { OrganizationWithMembers } from '@/crud/organization';
-import { t } from '@/lib/trpc';
+import { t, trpcProxyClient } from '@/lib/trpc';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -28,9 +28,16 @@ interface Props {
   organization: OrganizationWithMembers;
 }
 
+const checkExists = async (value: string) => {
+  const exists = await trpcProxyClient.organization.exists.query({
+    nameOrSlug: value,
+  });
+  return !exists;
+};
+
 const formSchema = z.object({
-  name: z.string().min(1).max(50),
-  slug: z.string().min(1).max(50),
+  name: z.string().min(1).max(50).refine(checkExists),
+  slug: z.string().min(1).max(50).refine(checkExists),
 });
 
 export function OrganizationSettingsForm({ user, organization }: Props) {
