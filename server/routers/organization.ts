@@ -7,6 +7,16 @@ import { OrganizationRole } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+const existsSchema = z.object({
+  name: z.string(),
+});
+const exists = protectedProcedure
+  .input(existsSchema)
+  .query(async ({ input }) => {
+    const { name } = input;
+    return await organizationCrud.exists(name);
+  });
+
 const createOrganizationSchema = z.object({
   organizationName: z.string(),
   userId: z.string(),
@@ -15,6 +25,16 @@ const create = protectedProcedure
   .input(createOrganizationSchema)
   .mutation(async ({ ctx, input }) => {
     return await organizationCrud.create(input.organizationName, input.userId);
+  });
+
+const deleteOrganizationSchema = z.object({
+  organizationId: z.string(),
+});
+const softDelete = adminProcedure
+  .input(deleteOrganizationSchema)
+  .mutation(async ({ input }) => {
+    const { organizationId } = input;
+    await organizationCrud.softDelete(organizationId);
   });
 
 const updateOrganizationSchema = z.object({
@@ -66,7 +86,6 @@ const inviteSchema = z.object({
 const invite = adminProcedure
   .input(inviteSchema)
   .mutation(async ({ ctx, input }) => {
-    console.log('input: ', input);
     const { email, organizationId, role } = input;
 
     // if the user already exists and is associated with the organization, do nothing
@@ -201,6 +220,8 @@ async function sendInvitationEmail(
 export default router({
   create,
   update,
+  exists,
+  softDelete,
   removeMember,
   updateMemberRole,
   invite,

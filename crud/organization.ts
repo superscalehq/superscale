@@ -1,24 +1,6 @@
 import { prisma } from '@/lib/db';
 import { OrganizationRole, Prisma } from '@prisma/client';
 
-export type OrganizationWithMembers = Prisma.PromiseReturnType<
-  typeof getBySlug
->;
-
-export async function getBySlug(slug: string) {
-  return await prisma.organization.findUniqueOrThrow({
-    where: { slug },
-    include: { members: { include: { user: true } } },
-  });
-}
-
-export async function getById(id: string) {
-  return await prisma.organization.findUniqueOrThrow({
-    where: { id },
-    include: { members: { include: { user: true } } },
-  });
-}
-
 /**
  * Creates a new organization and adds the user as an admin.
  * @param organizationName
@@ -45,6 +27,36 @@ export async function create(organizationName: string, userId: string) {
   return organization;
 }
 
+export type OrganizationWithMembers = Prisma.PromiseReturnType<
+  typeof getBySlug
+>;
+
+export async function getBySlug(slug: string) {
+  return await prisma.organization.findUniqueOrThrow({
+    where: { slug },
+    include: { members: { include: { user: true } } },
+  });
+}
+
+export async function exists(name: string) {
+  const [active, deleted] = await Promise.all([
+    prisma.organization.count({
+      where: { name, deletedAt: { not: null } },
+    }),
+    prisma.organization.count({
+      where: { name },
+    }),
+  ]);
+  return active + deleted > 0;
+}
+
+export async function getById(id: string) {
+  return await prisma.organization.findUniqueOrThrow({
+    where: { id },
+    include: { members: { include: { user: true } } },
+  });
+}
+
 export async function update(
   organizationId: string,
   name?: string,
@@ -54,6 +66,25 @@ export async function update(
     where: { id: organizationId },
     data: { name, slug },
   });
+}
+
+/**
+ * This function cascade soft deletes all the organization's relations
+ *  - OrganizationMembership
+ *  - UserInvitation
+ */
+export async function softDelete(organizationId: string) {
+  await prisma.$transaction([
+    prisma.organizationMembership.deleteMany({
+      where: { organizationId },
+    }),
+    prisma.userInvitation.deleteMany({
+      where: { organizationId },
+    }),
+    prisma.organization.delete({
+      where: { id: organizationId },
+    }),
+  ]);
 }
 
 const memberWithUser =

@@ -1,8 +1,10 @@
 import { DashboardHeader } from '@/components/header';
 import { Separator } from '@/components/ui/separator';
 import * as organizationCrud from '@/crud/organization';
-import { OrganizationSettingsForm } from './form';
 import { getCurrentUser } from '@/lib/auth/session';
+import { DeleteOrganization } from './delete-org';
+import { OrganizationSettingsForm } from './org-details-form';
+import { redirect } from 'next/navigation';
 
 interface Props {
   params: {
@@ -15,6 +17,9 @@ export default async function SettingsPage({
 }: Props) {
   const organization = await organizationCrud.getBySlug(slug);
   const user = await getCurrentUser();
+  if (!user) {
+    redirect('/auth/sign-in');
+  }
 
   return (
     <div className="flex flex-col">
@@ -24,6 +29,8 @@ export default async function SettingsPage({
       />
       <Separator className="mb-4 mt-6" />
       <OrganizationSettingsForm user={user} organization={organization} />
+      <Separator className="mb-4 mt-6" />
+      <DeleteOrganization user={user} organization={organization} />
     </div>
   );
 }

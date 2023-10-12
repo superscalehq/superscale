@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { UserWithMemberships } from '@/crud/user';
-import { t } from '@/lib/trpc';
+import { t, trpcProxyClient } from '@/lib/trpc';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -21,7 +21,18 @@ import { useWizard } from 'react-use-wizard';
 import { z } from 'zod';
 
 const formSchema = z.object({
-  organization: z.string().min(1, 'Organization name is required.'),
+  organization: z
+    .string()
+    .min(1, 'Organization name is required.')
+    .refine(
+      async (name) => {
+        const exists = await trpcProxyClient.organization.exists.query({
+          name,
+        });
+        return !exists;
+      },
+      { message: 'Organization name is already taken.' }
+    ),
 });
 
 interface Props {
@@ -37,6 +48,7 @@ export default function OrganizationStep({ user, setLoading }: Props) {
       organization: currentValue,
     },
   });
+
   const { activeStep, nextStep, isLastStep } = useWizard();
   const createOrganization = t.organization.create.useMutation();
   const router = useRouter();
