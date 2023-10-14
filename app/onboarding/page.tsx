@@ -4,6 +4,8 @@ import { getServerSession } from 'next-auth';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import Onboarding from './steps';
+import { Back } from '@/components/layout/back';
+import { WorkspaceNav } from '@/components/nav/workspace-nav';
 
 export enum Steps {
   WELCOME,
@@ -24,12 +26,18 @@ export default async function OnboardingPage() {
   }
 
   return (
-    <main className="container flex h-screen w-screen flex-col items-center justify-center space-y-12 py-24">
-      <div className="flex flex-col items-center justify-center">
-        <Image src="/logo.png" height={120} width={120} alt="logo" />
-        <h1 className="text-4xl font-bold">Superscale</h1>
+    <div className="flex h-screen flex-col">
+      <div className="flex w-full flex-row items-end justify-between px-8 py-6">
+        <Back />
+        {user ? <WorkspaceNav user={user} /> : null}
       </div>
-      <Onboarding user={user} />
-    </main>
+      <main className="container flex h-screen w-screen flex-col items-center justify-center space-y-12 py-24">
+        <div className="flex flex-col items-center justify-center">
+          <Image src="/logo.png" height={120} width={120} alt="logo" />
+          <h1 className="text-4xl font-bold">Superscale</h1>
+        </div>
+        <Onboarding user={user} />
+      </main>
+    </div>
   );
 }

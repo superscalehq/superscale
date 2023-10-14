@@ -32,16 +32,20 @@ export function WorkspaceNav({ user }: Props) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>Workspaces</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {user?.memberships.map((membership) => (
-          <DropdownMenuItem key={membership.organization.id}>
-            <Link href={`/${membership.organization.slug}`}>
-              {membership.organization.name}
-            </Link>
-          </DropdownMenuItem>
-        ))}
-        <DropdownMenuSeparator />
+        {user?.memberships.length > 0 ? (
+          <>
+            <DropdownMenuLabel>Workspaces</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {user?.memberships.map((membership) => (
+              <DropdownMenuItem key={membership.organization.id}>
+                <Link href={`/${membership.organization.slug}`}>
+                  {membership.organization.name}
+                </Link>
+              </DropdownMenuItem>
+            ))}
+            <DropdownMenuSeparator />
+          </>
+        ) : null}
         <DropdownMenuItem
           className="cursor-pointer"
           onSelect={(e) => {
