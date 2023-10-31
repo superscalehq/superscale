@@ -1,0 +1,31 @@
+---
+title: OnlyPrompts Launch
+summary: OnlyPrompts enables you to monetize prompts without writing a single line of code.
+author: ian-tan
+createdAt: 2023-10-31
+---
+
+About half a year ago, we wanted to speed run the many podcasts we enjoy. Thinking "how hard can that be?", we decided to build [Scribbler](https://scribbler.so), an AI podcast learning tool.
+
+Scribbler now does a MRR slightly north of $400. However, despite each of us having ~10 years of experience, we found out the hard way that, today, creating and monetizing a niche AI tool is still complicated, painful, and tedious.
+
+Some challenges we faced include:
+
+- Validating and evaluation flakey LLM outputs, especially when utilizing function calling
+- Retrying (expensive) failed calls, for example, to usage-based third party APIs
+- Implementing durable workflows suitable for long-running AI tasks (related to the above)
+- Managing multiple cloud providers
+- Experimenting with multiple embedding models, both API-only and self-hosted, each with different cost/performance tradeoffs
+- Experimenting with RAG techniques and vector storage
+- Reinventing the same wheels as every other niche AI tools, with subtle differences
+- Struggling with monitoring and making cost/revenue tradeoffs
+
+Yet, despite the difficulty involved, we realised that most AI tools are built around a handful of abstractions, with prompts at their core.
+
+That's why we built OnlyPrompts -- to enable you to monetize your AI tools and expertise without writing a single line of code.
+
+At its core, OnlyPrompts enables you to chain your prompts into a sophisticated workflow, optionally augmented by external data sources (e.g. Notion).
+
+Once a workflow is created and published, it is automatically exposed as a REST API compatible with the Poe protocol.
+
+This enables you to take advantage Poe's excellent UIs, distribution model and free inference. If you don't like Poe, you're free to build your own custom UI with tools like Bubble, as OnlyPrompts exposes a simple HTTP API.

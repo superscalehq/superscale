@@ -13,7 +13,6 @@ export default async function AcceptInvitationPage({
   searchParams: { accept },
 }: Props) {
   const invitation = await invitationCrud.findById(invitationId);
-  console.log('invitation: ', invitation);
   if (!invitation) {
     notFound();
   }
