@@ -1,13 +1,21 @@
 import { Image } from '@/components/ui/image';
+import { siteConfig } from '@/config/site';
 import {
   allAuthors,
   allPosts,
   Author,
   type Post,
 } from 'contentlayer/generated';
+import { format, parseISO } from 'date-fns';
+import { Metadata } from 'next';
 import { getMDXComponent } from 'next-contentlayer/hooks';
 import { notFound } from 'next/navigation';
-import { format, parseISO } from 'date-fns';
+
+interface Props {
+  params: {
+    slug: string;
+  };
+}
 
 export async function generateStaticParams() {
   return allPosts.map((post) => ({
@@ -15,11 +23,32 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function PostPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const post = allPosts.find((post) => post.slug === params.slug) as Post;
+  if (!post) {
+    return {};
+  }
+
+  return {
+    title: `${post.title} - ${siteConfig.name} Blog`,
+    description: post.summary,
+    openGraph: {
+      title: `${post.title} - ${siteConfig.name} Blog`,
+      description: post.summary,
+      siteName: siteConfig.name,
+      type: 'website',
+      images: [post.heroImage],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${post.title} - ${siteConfig.name} Blog`,
+      description: post.summary,
+      images: [post.heroImage],
+    },
+  };
+}
+
+export default async function PostPage({ params }: Props) {
   const post = allPosts.find((post) => post.slug === params.slug) as Post;
   if (!post) {
     notFound();
