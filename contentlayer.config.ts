@@ -7,6 +7,9 @@ import {
 import { remark } from 'remark';
 import remarkGfm from 'remark-gfm';
 import remarkReadingTime from 'remark-reading-time';
+import rehypePrettyCode from 'rehype-pretty-code';
+import rehypeSlug from 'rehype-slug';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 
 const computedFields = defineComputedFields<'Author' | 'Post'>({
   slug: {
@@ -46,6 +49,12 @@ export const Post = defineDocumentType(() => ({
     title: { type: 'string', required: true },
     summary: { type: 'string', required: true },
     author: { type: 'string', required: true },
+    heroImage: {
+      type: 'string',
+      required: false,
+      default:
+        'https://images.unsplash.com/photo-1698685425028-49105e29e793?auto=format&fit=crop&q=80&w=3840&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    },
     createdAt: { type: 'date', required: true },
     updatedAt: { type: 'date', required: false },
   },
@@ -71,5 +80,25 @@ export default makeSource({
       return options;
     },
     remarkPlugins: [remarkGfm],
+    rehypePlugins: [
+      rehypePrettyCode,
+      rehypeSlug,
+      [
+        rehypeAutolinkHeadings,
+        {
+          behavior: 'prepend',
+          content: {
+            type: 'element',
+            tagName: 'span',
+            properties: {
+              className: [
+                'absolute left-[0px] z-10 hidden text-slate-400 md:group-hover:inline',
+              ],
+            },
+            children: [{ type: 'text', value: '#' }],
+          },
+        },
+      ],
+    ],
   },
 });

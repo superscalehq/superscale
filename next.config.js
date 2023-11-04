@@ -2,6 +2,9 @@ const { withAxiom } = require('next-axiom');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    domains: ['images.unsplash.com'],
+  },
   webpack(config, { isServer }) {
     // see https://github.com/vercel/next.js/issues/48177
     // Configures webpack to handle SVG files with SVGR. SVGR optimizes and transforms SVG files
