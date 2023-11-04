@@ -30,10 +30,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${post.title} - ${siteConfig.name} Blog`,
+    title: `${post.title}`,
     description: post.summary,
     openGraph: {
-      title: `${post.title} - ${siteConfig.name} Blog`,
+      title: `${post.title} | ${siteConfig.name}`,
       description: post.summary,
       siteName: siteConfig.name,
       type: 'website',
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${post.title} - ${siteConfig.name} Blog`,
+      title: `${post.title} | ${siteConfig.name}`,
       description: post.summary,
       images: [post.heroImage],
     },
