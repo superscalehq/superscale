@@ -31,6 +31,7 @@ const computedFields = defineComputedFields<'Author' | 'Post'>({
               if (err) {
                 reject(err);
               } else {
+                // @ts-ignore
                 resolve(file.data.readingTime);
               }
             });

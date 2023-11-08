@@ -1,0 +1,40 @@
+---
+title: Introducing OnlyPrompts 3.0
+summary: OnlyPrompts enables you to monetize prompts without writing a single line of code.
+author: ian
+createdAt: 2023-10-31
+---
+
+About half a year ago, we wanted to speed run the many podcasts we enjoy. Like most developers, we thought to ourselves "how hard can that be?", and decided to build [Scribbler](https://scribbler.so), an AI learning tool that automatically transcribes, summarizes, and provides QA over podcasts.
+
+Scribbler now does slightly north of $500 MRR. However, despite both of us being seasoned developers with ~10 years of experience each, we found out the hard way that, in this nascent stage, creating and monetizing a niche AI tool is still complicated, painful, and tedious.
+
+To give that some color, these are just some of the more painful challenges we faced:
+
+- Validating and evaluating flakey LLM outputs, especially when utilizing function calling
+- Retrying (expensive) failed calls, for example, to usage-based third party APIs
+- Implementing durable/resilient workflows suitable for long-running AI tasks (related to the above)
+- Managing multiple cloud providers (Modal, Railway, AWS, Vercel)
+- Experimenting with multiple embedding models, both API-only and self-hosted, each with different cost/performance tradeoffs
+- Trial-and-error with different RAG techniques and vector storage
+- Struggling with monitoring COGS and making cost/revenue tradeoffs
+- Inventing a custom billing system to support usage-based pricing
+
+Coping with these challenges required a lot of time and effort. We ended up cobbling together a lot of custom ETL pipelines and custom infrastructure -- not directly related to our domain -- to support our customers' use cases.
+
+To make matters worse, neither of us had experience in marketing or sales. We had to figure out how to get our product in front of prospective customers, and get them to pay for it. We still suck at this, but we're a lot better than we were before.
+
+# The vanilla LLM application stack
+
+Looking around at what other developers at the application layer were doing, we realised that most generative AI applications naturally converge around a handful of key abstractions, with prompts at their core. The following image is a good representation of what this looks like, with some variations:
+
+<Image src="/blog/llm_stack.webp" width={1550} height={1085} />
+
+# Our solution
+
+Fortunately, software systems obey a power law. We figured we could get most builders 80% of the way to the power a fully bespoke solution offers, at 10% of the cost and effort. That's why we built OnlyPrompts -- to enable you to monetize your AI workflows and expertise without writing a single line of code.
+
+At its core, OnlyPrompts enables you to chain your prompts into a sophisticated workflow, optionally augmented by external data sources (e.g. Notion).
+Once a workflow is created and published, it is automatically exposed as a REST API compatible with the Poe protocol.
+
+This enables you to take advantage Poe's excellent UIs, distribution model and free inference. If you don't like Poe, you're free to build your own custom UI with tools like Bubble, as OnlyPrompts exposes a simple HTTP API. We think this is a really powerful toolkit, and can't wait to build more interesting bots with it. Join us!
