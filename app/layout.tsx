@@ -14,7 +14,16 @@ export const metadata: Metadata = {
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
-  keywords: ['AI', 'LLM', 'Chat bot', 'nocode', 'lowcode', 'creator'],
+  keywords: [
+    'SaaS',
+    'Code',
+    'developer',
+    'next.js',
+    'react',
+    'app router',
+    'shadcn-ui',
+    'indie hacker',
+  ],
   openGraph: {
     type: 'website',
     locale: 'en_US',
