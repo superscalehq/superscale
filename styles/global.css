@@ -16,6 +16,10 @@
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
  
+    --primary-01: 262.18, 96.75%, 75.88%;
+    --primary-02: 262.94, 94.44%, 92.94%;
+ 
+ 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
  
@@ -27,6 +31,10 @@
  
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
+
+    /* riddle ui */
+    --neogreen-01: 83, 76%, 55%;
+    --neogreen-02: 80, 83%, 88%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;

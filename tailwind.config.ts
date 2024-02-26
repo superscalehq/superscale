@@ -22,9 +22,12 @@ module.exports = {
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        // shadcn palette
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
+          '01': 'hsl(var(--primary-01))',
+          '02': 'hsl(var(--primary-02))',
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
@@ -50,6 +53,15 @@ module.exports = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+
+        // riddle ui palette
+        neogreen: {
+          '01': 'hsl(var(--neogreen-01))',
+          '02': 'hsl(var(--neogreen-02))',
+        },
+      },
+      boxShadow: {
+        'brand-md': '4px 4px 0 0 hsl(var(--foreground))',
       },
       borderRadius: {
         lg: 'var(--radius)',
