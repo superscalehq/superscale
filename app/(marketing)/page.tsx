@@ -1,9 +1,10 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import Feature from './components/feature';
 
 export default async function Home() {
   return (
-    <div className="flex flex-col items-center justify-center p-24">
+    <div className="flex flex-col items-center justify-center gap-24 px-12 py-24">
       <div className="mx-auto flex max-w-4xl flex-col gap-6 text-center">
         <div>
           <span className="rounded-full border-[1px] border-foreground bg-neogreen-01 px-2 py-1 text-xs font-semibold">
@@ -32,6 +33,54 @@ export default async function Home() {
             </Link>
           </Button>
         </div>
+      </div>
+      <div className="mx-auto grid max-w-4xl grid-cols-12 gap-4">
+        <div className="col-span-12 mb-6 text-center">
+          <h1 className="mb-6 text-4xl font-bold">
+            Best-in-class DX, 100% control
+          </h1>
+          <p className="text-lg">
+            Superscale delivers the developer experience of a best-in-class
+            Frontend Cloud while deploying into your infrastructure. No lock in,
+            opaque pricing, hidden costs, or surprise bills.
+          </p>
+        </div>
+        <Feature
+          className="bg-slimegreen-01 col-span-12 md:col-span-4"
+          icon="refresh"
+          header="BYO Cloud"
+          description="Since we deploy into your infrastructure, you can easily integrate existing systems with Superscale-managed frontends."
+        />
+        <Feature
+          className="col-span-12 bg-gray-200 md:col-span-4"
+          icon="refresh"
+          header="Self-host"
+          description="Does your organization have exceptional needs? Superscale is 100% open source and self-hostable."
+        />
+        <Feature
+          className="col-span-12 bg-primary-01 md:col-span-4"
+          icon="refresh"
+          header="Next.js support"
+          description="Superscale is built for Next.js, and supports cutting-edge features like caching and ISR."
+        />
+        <Feature
+          className="col-span-12 bg-gray-200 md:col-span-4"
+          icon="refresh"
+          header="Push-to-deploy"
+          description="Superscale automatically builds and deploys your changes, saving your from fighting brittle CI/CD pipelines."
+        />
+        <Feature
+          className="bg-topaz-01 col-span-12 md:col-span-4"
+          icon="branch"
+          header="Branch Previews"
+          description="Stop merging to main to see your changes. Superscale creates a preview environment for every branch."
+        />
+        <Feature
+          className="col-span-12 bg-gray-200 md:col-span-4"
+          icon="rollback"
+          header="Instant Rollback"
+          description="Deploy on Friday with full confidence with one-click rollbacks."
+        />
       </div>
     </div>
   );

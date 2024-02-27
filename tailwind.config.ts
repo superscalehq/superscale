@@ -55,9 +55,24 @@ module.exports = {
         },
 
         // riddle ui palette
+        gray: {
+          100: 'hsl(var(--gray-100))',
+          200: 'hsl(var(--gray-200))',
+          300: 'hsl(var(--gray-300))',
+          400: 'hsl(var(--gray-400))',
+          500: 'hsl(var(--gray-500))',
+        },
         neogreen: {
           '01': 'hsl(var(--neogreen-01))',
           '02': 'hsl(var(--neogreen-02))',
+        },
+        slimegreen: {
+          '01': 'hsl(var(--slime-green-01))',
+          '02': 'hsl(var(--slime-green-02))',
+        },
+        topaz: {
+          '01': 'hsl(var(--topaz-01))',
+          '02': 'hsl(var(--topaz-02))',
         },
       },
       boxShadow: {

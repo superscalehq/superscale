@@ -1,4 +1,10 @@
-import { Mail } from 'lucide-react';
+import {
+  Mail,
+  RefreshCw,
+  GitBranch,
+  RefreshCcw,
+  RotateCcw,
+} from 'lucide-react';
 import { LucideProps } from 'lucide-react';
 
 function Discord(props: LucideProps) {
@@ -37,6 +43,9 @@ function Twitter(props: LucideProps) {
 export type KnownIcon = keyof typeof Icons;
 
 export const Icons = {
+  rollback: RotateCcw,
+  branch: GitBranch,
+  refresh: RefreshCw,
   mail: Mail,
   discord: Discord,
   github: Github,
