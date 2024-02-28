@@ -46,22 +46,22 @@ export default async function Home() {
           </p>
         </div>
         <Feature
-          className="bg-slimegreen-01 col-span-12 md:col-span-4"
-          icon="refresh"
+          className="col-span-12 bg-slimegreen-01 md:col-span-4"
+          icon="cloud"
           header="BYO Cloud"
           description="Since we deploy into your infrastructure, you can easily integrate existing systems with Superscale-managed frontends."
         />
         <Feature
           className="col-span-12 bg-gray-200 md:col-span-4"
-          icon="refresh"
+          icon="server"
           header="Self-host"
           description="Does your organization have exceptional needs? Superscale is 100% open source and self-hostable."
         />
         <Feature
           className="col-span-12 bg-primary-01 md:col-span-4"
-          icon="refresh"
+          icon="nextjs"
           header="Next.js support"
-          description="Superscale is built for Next.js, and supports cutting-edge features like caching and ISR."
+          description="Superscale has first-class support for Next.js, including state-of-the-art features like caching and ISR."
         />
         <Feature
           className="col-span-12 bg-gray-200 md:col-span-4"
@@ -70,10 +70,10 @@ export default async function Home() {
           description="Superscale automatically builds and deploys your changes, saving your from fighting brittle CI/CD pipelines."
         />
         <Feature
-          className="bg-topaz-01 col-span-12 md:col-span-4"
-          icon="branch"
-          header="Branch Previews"
-          description="Stop merging to main to see your changes. Superscale creates a preview environment for every branch."
+          className="col-span-12 bg-topaz-01 md:col-span-4"
+          icon="dollar"
+          header="Cost control"
+          description="Advanced cost controls allow you to set budgets and alerts for, and see exactly where your money is going."
         />
         <Feature
           className="col-span-12 bg-gray-200 md:col-span-4"
