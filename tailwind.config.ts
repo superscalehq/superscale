@@ -76,7 +76,8 @@ module.exports = {
         },
       },
       boxShadow: {
-        'brand-md': '4px 4px 0 0 hsl(var(--foreground))',
+        'foreground-md': '4px 4px 0 0 hsl(var(--foreground))',
+        'background-md': '4px 4px 0 0 hsl(var(--background))',
       },
       borderRadius: {
         lg: 'var(--radius)',

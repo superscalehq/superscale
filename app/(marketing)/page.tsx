@@ -1,23 +1,23 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Feature from './components/feature';
+import Pricing from './components/pricing';
 
 export default async function Home() {
   return (
     <div className="flex flex-col items-center justify-center gap-24 px-12 py-24">
-      <div className="mx-auto flex max-w-4xl flex-col gap-6 text-center">
+      <div className="mx-auto flex max-w-5xl flex-col gap-6 text-center">
         <div>
-          <span className="rounded-full border-[1px] border-foreground bg-neogreen-01 px-2 py-1 text-xs font-semibold">
-            100% Open Source
-          </span>
+          <Badge variant="accent">100% Open Source</Badge>
         </div>
         <h1 className="text-6xl font-bold">
           A Frontend Cloud in your infrastructure.
         </h1>
         <p className="text-xl">
-          Superscale is the Frontend Cloud that you control. Deploy cutting-edge
-          JavaScript applications into your own infrastructure, 100% open source
-          and self-hostable.
+          Superscale is a DX platform for rapid frontend teams that
+          automatically deploys cutting-edge JavaScript applications into your
+          own infrastructure. 100% open source and self-hostable.
         </p>
         <div className="flex flex-row items-center justify-center gap-4">
           <Button asChild>
@@ -34,7 +34,7 @@ export default async function Home() {
           </Button>
         </div>
       </div>
-      <div className="mx-auto grid max-w-4xl grid-cols-12 gap-4">
+      <div className="mx-auto grid max-w-5xl grid-cols-12 gap-4">
         <div className="col-span-12 mb-6 text-center">
           <h1 className="mb-6 text-4xl font-bold">
             Best-in-class DX, 100% control
@@ -73,7 +73,7 @@ export default async function Home() {
           className="col-span-12 bg-topaz-01 md:col-span-4"
           icon="dollar"
           header="Cost control"
-          description="Advanced cost controls allow you to set budgets and alerts for, and see exactly where your money is going."
+          description="Advanced cost controls allow you to set budgets and alerts for the underlying infrastructure in a simple way. No surprise bills."
         />
         <Feature
           className="col-span-12 bg-gray-200 md:col-span-4"
@@ -81,6 +81,78 @@ export default async function Home() {
           header="Instant Rollback"
           description="Deploy on Friday with full confidence with one-click rollbacks."
         />
+      </div>
+      <div className="mx-auto grid max-w-5xl grid-cols-12 gap-4">
+        <div className="col-span-12 mb-6 text-center">
+          <h1 className="mb-6 text-4xl font-bold">Transparent pricing</h1>
+          <p className="text-lg">
+            Our mission is to provide a world-class developer platform at a fair
+            price. Superscale is free to self-host, with a cloud offering that
+            has no hidden costs.
+          </p>
+        </div>
+        <div className="col-span-12 grid grid-cols-12 gap-4">
+          <Pricing
+            className="col-span-4 bg-white"
+            badge={{ copy: 'Free', variant: 'secondary' }}
+            price="$0"
+            unit=" / month"
+            description="All the benefits of Superscale, for free."
+            items={[
+              'Full Next.js support',
+              'Unlimited deployments',
+              'Two preview environments',
+              'One team member',
+              'Community support',
+            ]}
+          >
+            <Button variant="secondary" asChild>
+              <Link href="#waitlist">Join the Waitlist</Link>
+            </Button>
+          </Pricing>
+          <Pricing
+            className="col-span-4 border-black bg-black text-white"
+            badge={{ copy: 'Pro', variant: 'default' }}
+            price="$15"
+            unit=" / user / month"
+            description="For teams and projects with rapid iteration cycles."
+            items={[
+              'Full Next.js support',
+              'Unlimited deployments',
+              'Unlimited preview environments',
+              'Advanced cost controls',
+              'Email support',
+            ]}
+            separator={{ className: 'bg-white' }}
+          >
+            <Button
+              variant="default"
+              className="hover:shadow-background-md"
+              asChild
+            >
+              <Link href="#waitlist">Join the Waitlist</Link>
+            </Button>
+          </Pricing>
+          <Pricing
+            className="col-span-4 bg-white"
+            badge={{ copy: 'Enterprise', variant: 'secondary' }}
+            price="Custom"
+            description="For organizations with exceptional needs."
+            items={[
+              'Full Next.js support',
+              'Unlimited deployments',
+              'Unlimited preview environments',
+              'Advanced cost controls',
+              'On-premises deployment',
+              '24/7 support',
+              'SLA',
+            ]}
+          >
+            <Button variant="secondary" asChild>
+              <Link href="#waitlist">Contact Us</Link>
+            </Button>
+          </Pricing>
+        </div>
       </div>
     </div>
   );

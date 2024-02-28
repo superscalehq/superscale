@@ -1,4 +1,5 @@
 import {
+  CheckCircle2,
   Mail,
   RefreshCw,
   GitBranch,
@@ -116,6 +117,7 @@ function Twitter(props: LucideProps) {
 export type KnownIcon = keyof typeof Icons;
 
 export const Icons = {
+  checkCircle: CheckCircle2,
   nextjs: NextJs,
   dollar: BadgeDollarSign,
   server: Server,
