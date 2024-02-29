@@ -11,7 +11,7 @@ interface Props {
 export default function MarketingFooter({ className }: Props) {
   return (
     <footer className={cn('w-full ', className)}>
-      <div className=" mx-auto grid max-w-4xl grid-cols-4 border-t border-foreground py-6">
+      <div className=" mx-auto grid max-w-5xl grid-cols-4 border-t border-foreground py-6">
         <div className="col-span-3 flex items-center justify-start">
           <div className="flex items-center justify-center gap-4">
             {socials.map((social) => (

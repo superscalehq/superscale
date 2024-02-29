@@ -8,7 +8,7 @@ export default function MarketingLayout({
 }) {
   return (
     <main className="flex min-h-full w-full flex-col items-center">
-      <MarketingHeader className="mx-auto max-w-4xl pt-8" />
+      <MarketingHeader className="mx-auto max-w-5xl pt-8" />
       {children}
       <MarketingFooter />
     </main>

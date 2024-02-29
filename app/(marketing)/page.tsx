@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Feature from './components/feature';
 import Pricing from './components/pricing';
+import { Icons } from '@/components/util/icons';
 
 export default async function Home() {
   return (
@@ -120,6 +121,7 @@ export default async function Home() {
               'Full Next.js support',
               'Unlimited deployments',
               'Unlimited preview environments',
+              'Custom domains',
               'Advanced cost controls',
               'Email support',
             ]}
@@ -152,6 +154,31 @@ export default async function Home() {
               <Link href="#waitlist">Contact Us</Link>
             </Button>
           </Pricing>
+        </div>
+      </div>
+      <div className="border-1 mx-auto flex w-full max-w-5xl flex-col gap-2 rounded-md border border-black bg-gray-200 p-12">
+        <h1 className="col-span-12 mb-6 text-center text-4xl font-semibold">
+          Coming Soon 🚀
+        </h1>
+        <p className="text-md mb-6 text-center">
+          Superscale is currently in development. Help us develop the product by
+          joining the waitlist and becoming a beta tester, starring the project
+          on GitHub, or writing some code!
+        </p>
+        <div className="col-span-12 flex flex-row items-center justify-center gap-4">
+          <Button
+            variant="secondary"
+            className=" bg-black text-white hover:bg-primary-01 hover:text-black"
+            asChild
+          >
+            <Link href="#waitlist">Join the Waitlist</Link>
+          </Button>
+          <Button variant="secondary" asChild>
+            <Link href="#waitlist">
+              <Icons.github className="mr-2 h-4 w-4" />
+              Star on GitHub
+            </Link>
+          </Button>
         </div>
       </div>
     </div>
