@@ -3,9 +3,10 @@ import { siteConfig } from '@/config/site';
 import '@/styles/global.css';
 import cn from 'classnames';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Archivo, Inter } from 'next/font/google';
 import { Provider } from './provider';
 
+const archivo = Archivo({ subsets: ['latin'] });
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -54,7 +55,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cn(inter.className, 'bg-background font-sans antialiased')}
+        className={cn(archivo.className, 'bg-background font-sans antialiased')}
       >
         <Provider>{children}</Provider>
         <Toaster />

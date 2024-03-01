@@ -5,6 +5,7 @@ import { marketingPagesConfig } from '@/config/pages';
 import { Button } from '@/components/ui/button';
 import { usePathname } from 'next/navigation';
 import cn from 'classnames';
+import { Icons } from '@/components/util/icons';
 
 interface Props {
   className?: string;
@@ -36,7 +37,10 @@ export default function MarketingHeader({ className }: Props) {
       </div>
       <div className="flex items-center justify-end md:col-span-1">
         <Button variant="secondary" asChild>
-          <Link href="/login">Join the waitlist</Link>
+          <Link href="/login">
+            Join the waitlist
+            <Icons.arrowUpRight className="ml-2 h-4 w-4" />
+          </Link>
         </Button>
       </div>
     </header>

@@ -22,7 +22,10 @@ export default async function Home() {
         </p>
         <div className="flex flex-row items-center justify-center gap-4">
           <Button asChild>
-            <Link href="#waitlist">Join the Waitlist</Link>
+            <Link href="#waitlist">
+              Join the Waitlist
+              <Icons.arrowUpRight className="ml-2 h-4 w-4" />
+            </Link>
           </Button>
           <Button variant="secondary" asChild>
             <Link
@@ -30,6 +33,7 @@ export default async function Home() {
               target="_blank"
               rel="noreferrer"
             >
+              <Icons.github className="mr-2 h-4 w-4" />
               Star on GitHub
             </Link>
           </Button>
@@ -108,7 +112,10 @@ export default async function Home() {
             ]}
           >
             <Button variant="secondary" asChild>
-              <Link href="#waitlist">Join the Waitlist</Link>
+              <Link href="#waitlist">
+                Join the Waitlist
+                <Icons.arrowUpRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
           </Pricing>
           <Pricing
@@ -132,7 +139,10 @@ export default async function Home() {
               className="hover:shadow-background-md"
               asChild
             >
-              <Link href="#waitlist">Join the Waitlist</Link>
+              <Link href="#waitlist">
+                Join the Waitlist
+                <Icons.arrowUpRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
           </Pricing>
           <Pricing
@@ -171,7 +181,10 @@ export default async function Home() {
             className=" bg-black text-white hover:bg-primary-01 hover:text-black"
             asChild
           >
-            <Link href="#waitlist">Join the Waitlist</Link>
+            <Link href="#waitlist">
+              Join the Waitlist
+              <Icons.arrowUpRight className="ml-2 h-4 w-4" />
+            </Link>
           </Button>
           <Button variant="secondary" asChild>
             <Link href="#waitlist">
