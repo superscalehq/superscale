@@ -31,7 +31,7 @@ export default async function SignInPage({ searchParams }: Props) {
           <h2 className="leading-2 text-xl font-semibold">
             Let's get started.
           </h2>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-foreground">
             Use your work email to make it easier to invite your co-workers.
           </p>
         </div>
@@ -42,10 +42,10 @@ export default async function SignInPage({ searchParams }: Props) {
               className="absolute inset-0 flex items-center"
               aria-hidden="true"
             >
-              <div className="w-full border-t border-gray-200" />
+              <div className="w-full border-t border-gray-400" />
             </div>
             <div className="relative flex justify-center text-sm font-medium leading-6">
-              <span className="bg-white px-6 text-muted-foreground">
+              <span className="bg-background px-6 text-foreground">
                 Or continue with email
               </span>
             </div>

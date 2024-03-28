@@ -16,7 +16,7 @@ export default function MarketingHeader({ className }: Props) {
   return (
     <header className={cn('grid w-full grid-cols-2 md:grid-cols-5', className)}>
       <div className="col-span-1 flex items-center">
-        <Link className="text-xl font-bold" href="/">
+        <Link className="text-2xl font-bold" href="/">
           Superscale
         </Link>
       </div>

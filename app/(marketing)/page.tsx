@@ -12,13 +12,11 @@ export default async function Home() {
         <div>
           <Badge variant="accent">100% Open Source</Badge>
         </div>
-        <h1 className="text-6xl font-bold">
-          A Frontend Cloud in your infrastructure.
-        </h1>
+        <h1 className="text-6xl font-bold">The Frontend Cloud you own.</h1>
         <p className="text-xl">
-          Superscale is a DX platform for rapid frontend teams that
-          automatically deploys cutting-edge JavaScript applications into your
-          own infrastructure. 100% open source and self-hostable.
+          Superscale is a Frontend PaaS that deploys full stack JavaScript
+          applications into your own cloud account, 100% open source and
+          self-hostable.
         </p>
         <div className="flex flex-row items-center justify-center gap-4">
           <Button asChild>
@@ -91,9 +89,9 @@ export default async function Home() {
         <div className="col-span-12 mb-6 text-center">
           <h1 className="mb-6 text-4xl font-bold">Transparent pricing</h1>
           <p className="text-lg">
-            Our mission is to provide a world-class developer platform at a fair
-            price. Superscale is free to self-host, with a cloud offering that
-            has no hidden costs.
+            Our mission is to provide a best-in-class platform for frontend
+            developers at a fair price. Superscale is free to self-host, with a
+            cloud offering that has no hidden costs.
           </p>
         </div>
         <div className="col-span-12 grid grid-cols-12 gap-4">
