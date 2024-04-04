@@ -19,6 +19,7 @@ export default async function DashboardLayout({
   }
 
   if (!user.name || user.memberships.length === 0) {
+    console.log('redirecting to onboarding');
     redirect('/onboarding');
   }
 

@@ -78,7 +78,6 @@ export default function SignInForm({
         <Button
           type="submit"
           className="mt-4 w-full"
-          loading={form.formState.isSubmitting}
           variant="outline"
           disabled={!form.formState.isValid}
         >

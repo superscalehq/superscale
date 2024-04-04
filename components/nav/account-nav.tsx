@@ -12,8 +12,8 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 
-import { UserAvatar } from './user-avatar';
 import { useParams } from 'next/navigation';
+import { UserAvatar } from './user-avatar';
 
 interface Props {
   user: User;
