@@ -7,6 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "shopify": "shopify",
+    "shopify:build": "shopify app build",
+    "shopify:dev": "shopify app dev",
+    "shopify:info": "shopify app info",
+    "shopify:generate": "shopify app generate",
+    "shopify:deploy": "shopify app deploy",
     "dev:email": "email dev --port 3001 --dir ./emails",
     "db:push": "prisma db push"
   },
@@ -26,6 +32,7 @@
     "@react-email/components": "^0.0.7",
     "@react-email/html": "^0.0.4",
     "@sentry/nextjs": "^7.64.0",
+    "@shopify/app": "^3.58.2",
     "@tailwindcss/typography": "^0.5.10",
     "@tanstack/react-query": "^4.32.6",
     "@tanstack/react-query-devtools": "^4.35.3",
@@ -64,6 +71,7 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
+    "@shopify/cli": "^3.58.2",
     "@svgr/webpack": "^8.1.0",
     "encoding": "^0.1.13",
     "eslint": "^8.46.0",

@@ -1,0 +1,6 @@
+name = "remix"
+roles = ["frontend", "backend"]
+webhooks_path = "/api/webhooks"
+
+[commands]
+dev = "npm run dev"
