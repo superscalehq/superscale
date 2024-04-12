@@ -3,12 +3,13 @@
 client_id = "b60d764a95fd19dfc2f4c1c2e68b458b"
 name = "superscale-test-app"
 handle = "superscale-test-app"
-application_url = "https://literature-raise-min-shoulder.trycloudflare.com"
+application_url = "https://boar-helped-mite.ngrok-free.app/onboarding/shopify"
 embedded = false
 
 [build]
-automatically_update_urls_on_dev = true
+automatically_update_urls_on_dev = false
 dev_store_url = "quickstart-5d36455a.myshopify.com"
+include_config_on_deploy = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
@@ -16,9 +17,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://literature-raise-min-shoulder.trycloudflare.com/auth/callback",
-  "https://literature-raise-min-shoulder.trycloudflare.com/auth/shopify/callback",
-  "https://literature-raise-min-shoulder.trycloudflare.com/api/auth/callback"
+  "https://boar-helped-mite.ngrok-free.app/auth/callback",
+  "https://boar-helped-mite.ngrok-free.app/auth/shopify/callback",
+  "https://boar-helped-mite.ngrok-free.app/api/auth/callback"
 ]
 
 [webhooks]
