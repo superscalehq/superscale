@@ -10,12 +10,16 @@
     "tunnel": "ngrok http --domain boar-helped-mite.ngrok-free.app 3000",
     "shopify": "shopify",
     "shopify:build": "shopify app build",
+    "shopify:env": "shopify app env pull",
     "shopify:dev": "shopify app dev --tunnel-url=https://boar-helped-mite.ngrok-free.app:80",
     "shopify:info": "shopify app info",
     "shopify:generate": "shopify app generate",
     "shopify:deploy": "shopify app deploy",
     "dev:email": "email dev --port 3001 --dir ./emails",
-    "db:push": "prisma db push"
+    "db:generate": "prisma generate",
+    "db:start": "supabase db start",
+    "db:push": "prisma db push",
+    "postinstall": "pnpm run db:generate"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
@@ -34,6 +38,7 @@
     "@react-email/html": "^0.0.4",
     "@sentry/nextjs": "^7.64.0",
     "@shopify/app": "^3.58.2",
+    "@shopify/shopify-api": "^9.7.1",
     "@tailwindcss/typography": "^0.5.10",
     "@tanstack/react-query": "^4.32.6",
     "@tanstack/react-query-devtools": "^4.35.3",

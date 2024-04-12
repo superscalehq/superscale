@@ -17,9 +17,7 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://boar-helped-mite.ngrok-free.app/auth/callback",
-  "https://boar-helped-mite.ngrok-free.app/auth/shopify/callback",
-  "https://boar-helped-mite.ngrok-free.app/api/auth/callback"
+  "https://boar-helped-mite.ngrok-free.app/api/auth/shopify/callback"
 ]
 
 [webhooks]
