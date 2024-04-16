@@ -5,6 +5,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator json {
+  provider = "prisma-json-types-generator"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -136,6 +140,7 @@ model Integration {
   deletedAt           DateTime?
   integrationProvider IntegrationProvider
   integrationType     IntegrationType
+  /// [IntegrationMetadata]
   metadata            Json?
   organizationId      String
   organization        Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
@@ -160,6 +165,7 @@ model IntegrationCredential {
   expiresAt          DateTime? // null indicates that the credential never expires.
   credentialType     CredentialType
   credentialValue    String
+  /// [CredentialMetadata]
   credentialMetadata Json? // Metadata such as the scopes of the OAuth credential, or, in the case of API keys, the name of the key etc.
   integrationId      String
   integration        Integration    @relation(fields: [integrationId], references: [id], onDelete: Cascade)

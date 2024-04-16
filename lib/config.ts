@@ -7,6 +7,7 @@ export const serverSchema = z.object({
   NODE_ENV: z
     .enum(['development', 'test', 'production'])
     .default('development'),
+  LOG_LEVEL: z.string().default('info'),
 
   // Storage
   DATABASE_URL: z.string().url().optional(),
@@ -49,11 +50,17 @@ export const serverSchema = z.object({
   SHOPIFY_APP_STORE_URL: z.string().default(''),
 });
 
-export const serverConfig = serverSchema.parse(process.env);
+const env = {
+  ...process.env,
+  NODE_ENV: process.env.NODE_ENV,
+  LOG_LEVEL: process.env.LOG_LEVEL,
+};
+
+export const serverConfig = serverSchema.parse(env);
 
 export const clientSchema = z.object({
   NEXT_PUBLIC_AXIOM_DATASET: z.string().default('supserscale_dev'),
   NEXT_PUBLIC_AXIOM_TOKEN: z.string().default(''),
 });
 
-export const clientConfig = clientSchema.parse(process.env);
+export const clientConfig = clientSchema.parse(env);
