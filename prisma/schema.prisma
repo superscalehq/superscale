@@ -76,6 +76,7 @@ model Organization {
   slug           String                   @unique
   members        OrganizationMembership[]
   UserInvitation UserInvitation[]
+  Integration    Integration[]
 }
 
 // Member is a join table that links Users to Organizations.
@@ -114,4 +115,52 @@ model UserInvitation {
 
   @@unique([email, organizationId])
   @@index([organizationId])
+}
+
+// IntegrationType is the type of integration, typically OAUTH or API. Currently, only OAUTH is supported.
+enum IntegrationType {
+  OAUTH
+}
+
+// IntegrationProvider is the provider of the integration. Currently, only Shopify is supported.
+enum IntegrationProvider {
+  SHOPIFY
+}
+
+// Integration is a third-party integration that can be used to connect to a third-party service.
+model Integration {
+  id                  String                  @id @default(cuid())
+  externalId          String
+  createdAt           DateTime                @default(now())
+  updatedAt           DateTime                @default(now()) @updatedAt
+  deletedAt           DateTime?
+  integrationProvider IntegrationProvider
+  integrationType     IntegrationType
+  metadata            Json?
+  organizationId      String
+  organization        Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  credentials         IntegrationCredential[]
+
+  @@unique([externalId, integrationProvider])
+  @@index([organizationId])
+}
+
+enum CredentialType {
+  API_KEY
+  OAUTH_ACCESS_TOKEN
+  OAUTH_REFRESH_TOKEN
+}
+
+// IntegrationCredential is a credential that can be used to connect to a third-party service.
+model IntegrationCredential {
+  id                 String         @id @default(cuid())
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @default(now()) @updatedAt
+  deletedAt          DateTime?
+  expiresAt          DateTime? // null indicates that the credential never expires.
+  credentialType     CredentialType
+  credentialValue    String
+  credentialMetadata Json? // Metadata such as the scopes of the OAuth credential, or, in the case of API keys, the name of the key etc.
+  integrationId      String
+  integration        Integration    @relation(fields: [integrationId], references: [id], onDelete: Cascade)
 }

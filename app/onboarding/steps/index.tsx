@@ -8,12 +8,14 @@ import { useState } from 'react';
 import { Wizard, useWizard } from 'react-use-wizard';
 import NameStep from './name';
 import OrganizationStep from './organization';
+import ShopifyStep from './shopify';
 
 interface FooterProps {
   loading: boolean;
+  canProceed: boolean;
 }
 
-function Footer({ loading }: FooterProps) {
+function Footer({ canProceed, loading }: FooterProps) {
   const { activeStep, previousStep, isFirstStep, isLastStep, stepCount } =
     useWizard();
   const progress = Math.ceil(((activeStep + 1) / stepCount) * 100);
@@ -34,8 +36,8 @@ function Footer({ loading }: FooterProps) {
         {!isLastStep && (
           <Button
             type="submit"
-            loading={loading}
             form={`onboarding-step-${activeStep + 1}`}
+            disabled={!canProceed}
           >
             Next
           </Button>
@@ -43,8 +45,8 @@ function Footer({ loading }: FooterProps) {
         {isLastStep && (
           <Button
             type="submit"
-            loading={loading}
             form={`onboarding-step-${activeStep + 1}`}
+            disabled={!canProceed}
           >
             Finish
           </Button>
@@ -56,21 +58,33 @@ function Footer({ loading }: FooterProps) {
 
 interface OnboardingProps {
   user: UserWithMemberships;
+  shopifyAppStoreUrl: string;
 }
 
 export default function Onboarding(props: OnboardingProps) {
-  const { user } = props;
-  const initialStep = user.name ? 1 : 0;
+  const { user, shopifyAppStoreUrl } = props;
+  const initialStep = user.name
+    ? user.memberships?.[0]?.organization.name
+      ? 2
+      : 1
+    : 0;
   const [loading, setLoading] = useState(false);
+  const [canProceed, setCanProceed] = useState(true);
   return (
     <Card className="flex flex-col px-8 py-6 md:h-[500px] md:w-[600px]">
       <Wizard
         startIndex={initialStep}
         wrapper={<div className="flex flex-1 flex-col justify-center" />}
-        footer={<Footer loading={loading} />}
+        footer={<Footer loading={loading} canProceed={canProceed} />}
       >
         <NameStep user={user} setLoading={setLoading} />
         <OrganizationStep user={user} setLoading={setLoading} />
+        <ShopifyStep
+          user={user}
+          setLoading={setLoading}
+          shopifyAppStoreUrl={shopifyAppStoreUrl}
+          setCanProceed={setCanProceed}
+        />
       </Wizard>
     </Card>
   );

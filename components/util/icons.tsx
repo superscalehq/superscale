@@ -8,6 +8,7 @@ import {
   RotateCcw,
   Server,
   BadgeDollarSign,
+  ExternalLink,
 } from 'lucide-react';
 import { LucideProps } from 'lucide-react';
 
@@ -128,6 +129,7 @@ export const Icons = {
   branch: GitBranch,
   refresh: RefreshCw,
   mail: Mail,
+  externalLink: ExternalLink,
   discord: Discord,
   github: Github,
   twitter: Twitter,

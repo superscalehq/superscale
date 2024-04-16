@@ -4,7 +4,9 @@ const DEFAULT_VALUE_DO_NOT_USE_IN_PRODUCTION = '__default__';
 
 export const serverSchema = z.object({
   // App
-  NODE_ENV: z.enum(['development', 'test', 'production']),
+  NODE_ENV: z
+    .enum(['development', 'test', 'production'])
+    .default('development'),
 
   // Storage
   DATABASE_URL: z.string().url().optional(),
@@ -43,7 +45,8 @@ export const serverSchema = z.object({
   // Shopify
   SHOPIFY_API_KEY: z.string().default(''),
   SHOPIFY_API_SECRET: z.string().default(''),
-  SHOPIFY_APP_URL: z.string().url().default(''),
+  SHOPIFY_APP_URL: z.string().default(''),
+  SHOPIFY_APP_STORE_URL: z.string().default(''),
 });
 
 export const serverConfig = serverSchema.parse(process.env);

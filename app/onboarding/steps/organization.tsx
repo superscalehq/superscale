@@ -20,21 +20,6 @@ import { useForm } from 'react-hook-form';
 import { useWizard } from 'react-use-wizard';
 import { z } from 'zod';
 
-const formSchema = z.object({
-  organization: z
-    .string()
-    .min(1, 'Organization name is required.')
-    .refine(
-      async (name) => {
-        const exists = await trpcProxyClient.organization.exists.query({
-          nameOrSlug: name,
-        });
-        return !exists;
-      },
-      { message: 'Organization name is already taken.' }
-    ),
-});
-
 interface Props {
   user: UserWithMemberships;
   setLoading: (loading: boolean) => void;
@@ -42,6 +27,23 @@ interface Props {
 
 export default function OrganizationStep({ user, setLoading }: Props) {
   const currentValue = user.memberships[0]?.organization.name ?? '';
+  const formSchema = z.object({
+    organization: z
+      .string()
+      .min(1, 'Organization name is required.')
+      .refine(
+        async (name) => {
+          if (name === currentValue) {
+            return true;
+          }
+          const exists = await trpcProxyClient.organization.exists.query({
+            nameOrSlug: name,
+          });
+          return !exists;
+        },
+        { message: 'Organization name is already taken.' }
+      ),
+  });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,6 +57,10 @@ export default function OrganizationStep({ user, setLoading }: Props) {
   const submit = form.handleSubmit(
     async ({ organization }: z.infer<typeof formSchema>) => {
       try {
+        if (organization === currentValue) {
+          nextStep();
+          return;
+        }
         setLoading(true);
         const org = await createOrganization.mutateAsync({
           userId: user.id,

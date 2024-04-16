@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import Onboarding from './steps';
 import { Back } from '@/components/layout/back';
 import { WorkspaceNav } from '@/components/nav/workspace-nav';
+import { serverConfig } from '@/lib/config';
 
 export enum Steps {
   WELCOME,
@@ -21,9 +22,9 @@ export default async function OnboardingPage() {
 
   const user = await userCrud.getById(session.user.id);
 
-  if (user.name && user.memberships.length > 0) {
-    return redirect(`/${user.memberships[0].organization.slug}`);
-  }
+  // if (user.name && user.memberships.length > 0) {
+  //   return redirect(`/${user.memberships[0].organization.slug}`);
+  // }
 
   return (
     <div className="flex h-screen flex-col">
@@ -36,7 +37,10 @@ export default async function OnboardingPage() {
           <Image src="/logo.png" height={120} width={120} alt="logo" />
           <h1 className="text-4xl font-bold">Superscale</h1>
         </div>
-        <Onboarding user={user} />
+        <Onboarding
+          user={user}
+          shopifyAppStoreUrl={serverConfig.SHOPIFY_APP_STORE_URL}
+        />
       </main>
     </div>
   );
