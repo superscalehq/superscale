@@ -1,6 +1,0 @@
-name = "remix"
-roles = ["frontend", "backend"]
-webhooks_path = "/api/webhook/shopify"
-
-[commands]
-dev = "npm run dev"
