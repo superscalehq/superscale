@@ -72,15 +72,16 @@ model VerificationToken {
 // An Organization is the main point of entry to the application. A user can't do anything until they create or join an organization.
 // A User can be a member of any number of Organizations.
 model Organization {
-  id             String                   @id @default(cuid())
-  createdAt      DateTime                 @default(now())
-  updatedAt      DateTime                 @updatedAt
-  deletedAt      DateTime?
-  name           String                   @unique
-  slug           String                   @unique
-  members        OrganizationMembership[]
-  UserInvitation UserInvitation[]
-  Integration    Integration[]
+  id                  String                   @id @default(cuid())
+  createdAt           DateTime                 @default(now())
+  updatedAt           DateTime                 @updatedAt
+  deletedAt           DateTime?
+  name                String                   @unique
+  slug                String                   @unique
+  completedOnboarding Boolean                  @default(false)
+  members             OrganizationMembership[]
+  UserInvitation      UserInvitation[]
+  Integration         Integration[]
 }
 
 // Member is a join table that links Users to Organizations.

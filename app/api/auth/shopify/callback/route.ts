@@ -51,5 +51,12 @@ export async function GET(req: Request) {
     },
   });
 
+  await prisma.organization.update({
+    where: { id: integration.organizationId },
+    data: {
+      completedOnboarding: true,
+    },
+  });
+
   return redirect(`/${integration.organization.slug}`);
 }

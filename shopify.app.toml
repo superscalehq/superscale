@@ -3,7 +3,7 @@
 client_id = "b60d764a95fd19dfc2f4c1c2e68b458b"
 name = "superscale-test-app"
 handle = "superscale-test-app"
-application_url = "https://boar-helped-mite.ngrok-free.app/onboarding/shopify"
+application_url = "https://boar-helped-mite.ngrok-free.app/api/auth/shopify"
 embedded = false
 
 [build]

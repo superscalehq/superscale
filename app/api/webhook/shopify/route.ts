@@ -1,16 +1,12 @@
 import { prisma } from '@/lib/db';
+import { logger } from '@/lib/logger';
 import { shopify } from '@/lib/shopify';
 import { IntegrationProvider } from '@prisma/client';
 import { WebhookValidationErrorReason } from '@shopify/shopify-api';
 
 export async function POST(req: Request) {
-  // const data = await req.json();
-  // console.log('processing webhook: ', data);
   const body = await req.text();
-  console.log(
-    'processing webhook: ',
-    JSON.stringify(JSON.parse(body), null, 2)
-  );
+  logger.info('processing webhook: ', { body });
   const res = await shopify.webhooks.validate({
     rawBody: body,
     rawRequest: req,
@@ -18,13 +14,13 @@ export async function POST(req: Request) {
 
   if (!res.valid) {
     if (res.reason === WebhookValidationErrorReason.InvalidHmac) {
-      console.error('Webhook HMAC validation failed', res);
+      logger.error('Webhook HMAC validation failed', res);
       return new Response(undefined, {
         status: 401,
         statusText: 'Unauthorized',
       });
     } else {
-      console.error('Webhook validation failed', res);
+      logger.error('Webhook validation failed', res);
       return new Response(undefined, {
         status: 400,
         statusText: 'Bad Request',
@@ -41,7 +37,10 @@ export async function POST(req: Request) {
     },
   });
 
-  console.log('deleted integration');
+  logger.info('deleted integration', {
+    externalId: res.domain,
+    integrationProvider: IntegrationProvider.SHOPIFY,
+  });
 
   return new Response(undefined, {
     status: 200,

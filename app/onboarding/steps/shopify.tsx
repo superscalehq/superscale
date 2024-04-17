@@ -14,16 +14,9 @@ interface Props {
   user: UserWithMemberships;
   shopifyAppStoreUrl: string;
   setLoading: (loading: boolean) => void;
-  setCanProceed: (canProceed: boolean) => void;
 }
 
-export default function ShopifyStep({
-  shopifyAppStoreUrl,
-  setCanProceed,
-}: Props) {
-  useEffect(() => {
-    setCanProceed(false);
-  }, []);
+export default function ShopifyStep({ shopifyAppStoreUrl }: Props) {
   return (
     <>
       <CardHeader>

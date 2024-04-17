@@ -7,7 +7,11 @@ export default async function Dashboard() {
     redirect(`/auth/sign-in`);
   }
 
-  if (user.memberships.length === 0) {
+  // Redirect to onboarding if the user doesn't yet have an organization or has not completed onboarding
+  if (
+    !user.memberships?.length ||
+    !user.memberships[0].organization.completedOnboarding
+  ) {
     redirect(`/onboarding`);
   }
 
