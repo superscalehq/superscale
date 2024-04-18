@@ -171,3 +171,33 @@ model IntegrationCredential {
   integrationId      String
   integration        Integration    @relation(fields: [integrationId], references: [id], onDelete: Cascade)
 }
+
+enum CustomerType {
+  SHOPIFY
+  ANONYMOUS
+}
+
+model Customer {
+  id         String       @id @default(cuid())
+  externalId String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @default(now()) @updatedAt
+  deletedAt  DateTime?
+  type       CustomerType
+  Ticket     Ticket[]
+}
+
+enum TicketStatus {
+  OPEN
+  CLOSED
+}
+
+model Ticket {
+  id         String       @id @default(cuid())
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @default(now()) @updatedAt
+  deletedAt  DateTime?
+  status     TicketStatus
+  customerId String
+  customer   Customer     @relation(fields: [customerId], references: [id])
+}
