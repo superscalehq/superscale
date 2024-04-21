@@ -2,9 +2,12 @@
   "name": "superscale-chat",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "build:watch": "vite build --watch"
   },
   "devDependencies": {
+    "@pnpm/find-workspace-dir": "^7.0.0",
+    "@pnpm/workspace.find-packages": "^2.0.2",
     "@sveltejs/vite-plugin-svelte": "^3.1.0",
     "@svgr/webpack": "^8.1.0",
     "@tsconfig/svelte": "^5.0.4",
@@ -30,6 +33,7 @@
     "tailwindcss-animate": "^1.0.7",
     "ts-node": "^10.9.1",
     "tslib": "^2.6.2",
-    "vite": "^5.2.9"
+    "vite": "^5.2.9",
+    "vite-plugin-static-copy": "^1.0.3"
   }
 }
