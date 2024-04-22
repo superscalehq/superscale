@@ -1,0 +1,7 @@
+{
+	"eslint.workingDirectories": [
+		"apps/chat",
+		"apps/web"
+	]
+}
+

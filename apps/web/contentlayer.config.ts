@@ -24,14 +24,14 @@ const computedFields = defineComputedFields<'Author' | 'Post'>({
       // therefore we have to compile here again to access it :|
       const { minutes } = await new Promise<{ minutes: number }>(
         (resolve, reject) => {
-          // @ts-ignore
+          // @ts-expect-error: we need to ignore this for now
           remark()
             .use(remarkReadingTime)
             .process(doc.body.raw, (err, file) => {
               if (err) {
                 reject(err);
               } else {
-                // @ts-ignore
+                // @ts-expect-error: we need to ignore this for now
                 resolve(file.data.readingTime);
               }
             });
@@ -73,7 +73,7 @@ export const Author = defineDocumentType(() => ({
 }));
 
 export default makeSource({
-  contentDirPath: 'content',
+  contentDirPath: 'src/content',
   documentTypes: [Author, Post],
   mdx: {
     esbuildOptions: (options) => {
