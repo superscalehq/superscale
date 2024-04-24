@@ -1,5 +1,5 @@
 {
-  "name": "superscale-chat",
+  "name": "@superscale/chat",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -15,6 +15,7 @@
     "eslint": "^8.46.0",
     "eslint-config-next": "^13.4.13",
     "eslint-plugin-tailwindcss": "^3.13.0",
+    "esm-env": "^1.0.0",
     "postcss": "8.4.27",
     "prettier": "^3.0.1",
     "prettier-plugin-prisma": "^5.0.0",
@@ -27,7 +28,6 @@
     "remark-gfm": "^4.0.0",
     "remark-reading-time": "^2.0.1",
     "supabase": "^1.83.7",
-    "svelte": "^4.2.14",
     "svelte-check": "^3.6.9",
     "tailwindcss": "3.3.3",
     "tailwindcss-animate": "^1.0.7",
@@ -35,5 +35,10 @@
     "tslib": "^2.6.2",
     "vite": "^5.2.9",
     "vite-plugin-static-copy": "^1.0.3"
+  },
+  "dependencies": {
+    "convex": "^1.11.2",
+    "convex-svelte": "^0.0.6",
+    "svelte": "5.0.0-next.123"
   }
 }

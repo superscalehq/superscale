@@ -11,12 +11,13 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { OrganizationWithMembers } from '@/crud/organization';
-import { UserWithMemberships } from '@/crud/user';
-import { t, trpcProxyClient } from '@/lib/trpc';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { OrganizationRole } from '@prisma/client';
-import { TRPCClientError } from '@trpc/client';
+import {
+  OrganizationWithMembers,
+  UserWithMemberships,
+} from '@superscale/crud/types';
+import { TRPCClientError, trpc } from '@superscale/trpc/client';
 import cn from 'classnames';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -29,7 +30,8 @@ interface Props {
 }
 
 const checkExists = async (value: string) => {
-  const exists = await trpcProxyClient.organization.exists.query({
+  const { client } = trpc.useUtils();
+  const exists = await client.organization.exists.query({
     nameOrSlug: value,
   });
   return !exists;
@@ -50,7 +52,7 @@ export function OrganizationSettingsForm({ user, organization }: Props) {
   });
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const update = t.organization.update.useMutation();
+  const update = trpc.organization.update.useMutation();
   const { toast } = useToast();
   const submit = form.handleSubmit(async ({ name, slug }) => {
     try {

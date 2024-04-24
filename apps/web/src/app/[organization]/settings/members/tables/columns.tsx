@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -15,9 +16,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/components/ui/use-toast';
-import { canRemove, getRole } from '@/lib/auth/authn';
-import { t } from '@/lib/trpc';
-import { OrganizationRole } from '@prisma/client';
+import { canRemove, getRole } from '@superscale/lib/auth/authn';
+import { OrganizationRole } from '@superscale/prisma/client';
+import { trpc } from '@superscale/trpc/client';
 import { createColumnHelper } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -101,8 +102,8 @@ export const columns = [
     cell(props) {
       const router = useRouter();
       const { toast } = useToast();
-      const updateRole = t.organization.updateMemberRole.useMutation();
-      const { user: currentUser, organization } = props.table.options.meta!!;
+      const updateRole = trpc.organization.updateMemberRole.useMutation();
+      const { user: currentUser, organization } = props.table.options.meta!;
       const organizationRole = currentUser.memberships.find(
         (m) => m.organization.id === organization.id
       )?.role;
@@ -115,7 +116,7 @@ export const columns = [
           return;
         try {
           await updateRole.mutateAsync({
-            organizationId: props.table.options.meta!!.organization.id,
+            organizationId: props.table.options.meta!.organization.id,
             userId: props.row.original.userId,
             role: value,
           });
@@ -178,12 +179,13 @@ export const columns = [
     size: 50,
     cell(props) {
       const row = props.row;
-      const { user: currentUser, organization } = props.table.options.meta!!;
-      const organizationRole = getRole(currentUser, organization.id);
-      const removeMember = t.organization.removeMember.useMutation();
-      const leaveOrganization = t.organization.leaveOrganization.useMutation();
-      const revokeInvitation = t.organization.revokeInvitation.useMutation();
-      const resendInvitation = t.organization.resendInvitation.useMutation();
+      const { user: currentUser, organization } = props.table.options.meta!;
+      const organizationRole = getRole(currentUser, organization.id)!;
+      const removeMember = trpc.organization.removeMember.useMutation();
+      const leaveOrganization =
+        trpc.organization.leaveOrganization.useMutation();
+      const revokeInvitation = trpc.organization.revokeInvitation.useMutation();
+      const resendInvitation = trpc.organization.resendInvitation.useMutation();
       const router = useRouter();
       const { toast } = useToast();
       const handleRemove = async () => {

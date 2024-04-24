@@ -1,5 +1,5 @@
-import { UserWithMemberships } from '@/crud/user';
-import { Organization } from '@prisma/client';
+import { UserWithMemberships } from '@superscale/crud/types';
+import { Organization } from '@superscale/prisma/client';
 import { RowData } from '@tanstack/react-table';
 
 declare module '@tanstack/react-table' {

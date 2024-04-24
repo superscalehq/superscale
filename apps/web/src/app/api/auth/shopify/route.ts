@@ -1,4 +1,4 @@
-import { getCurrentUser } from '@/lib/auth/session';
+import { getCurrentUser } from '@superscale/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
 import { shopify } from '@/lib/shopify';

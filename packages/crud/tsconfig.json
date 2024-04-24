@@ -1,0 +1,5 @@
+{
+	"extends": "@superscale/tsconfig/lib.tsconfig.json",
+	"include": ["src/**/*.ts", "src/**/*.tsx", "prisma/**/*.ts"],
+	"exclude": ["node_modules"]
+}

@@ -1,5 +1,5 @@
 import * as invitationCrud from '@/crud/invitation';
-import { getCurrentUser } from '@/lib/auth/session';
+import { getCurrentUser } from '@superscale/lib/auth/session';
 import { notFound, redirect } from 'next/navigation';
 import { InvitationCard } from './card';
 

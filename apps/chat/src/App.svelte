@@ -2,6 +2,8 @@
   import svelteLogo from './assets/svelte.svg';
   import viteLogo from '/vite.svg';
   import Counter from './lib/Counter.svelte';
+  import { setupConvex } from 'convex-svelte';
+  setupConvex(import.meta.env.VITE_CONVEX_URL);
 </script>
 
 <main class="main">

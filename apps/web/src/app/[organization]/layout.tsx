@@ -1,7 +1,7 @@
 import { AccountNav } from '@/components/nav/account-nav';
 import { MainNav } from '@/components/nav/main-nav';
 import { dashboardConfig } from '@/config/dashboard';
-import { getCurrentUser } from '@/lib/auth/session';
+import { getCurrentUser } from '@superscale/lib/auth/session';
 import { notFound, redirect } from 'next/navigation';
 
 interface Props {
