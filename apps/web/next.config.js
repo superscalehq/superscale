@@ -37,6 +37,12 @@ const nextConfig = {
 
     return config;
   },
+  transpilePackages: [
+    '@superscale/crud',
+    '@superscale/trpc',
+    '@superscale/lib',
+    '@superscale/prisma',
+  ],
 };
 
 module.exports = withAxiom(nextConfig);

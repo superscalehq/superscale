@@ -12,16 +12,16 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { UserWithMemberships } from '@/crud/user';
-import { t, trpcProxyClient } from '@/lib/trpc';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { user as userCrud } from '@superscale/crud';
+import { trpc } from '@superscale/trpc/client';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { useWizard } from 'react-use-wizard';
 import { z } from 'zod';
 
 interface Props {
-  user: UserWithMemberships;
+  user: userCrud.UserWithMemberships;
   setLoading: (loading: boolean) => void;
 }
 
@@ -36,7 +36,8 @@ export default function OrganizationStep({ user, setLoading }: Props) {
           if (name === currentValue) {
             return true;
           }
-          const exists = await trpcProxyClient.organization.exists.query({
+          const { client } = trpc.useUtils();
+          const exists = await client.organization.exists.query({
             nameOrSlug: name,
           });
           return !exists;
@@ -52,7 +53,7 @@ export default function OrganizationStep({ user, setLoading }: Props) {
   });
 
   const { activeStep, nextStep, isLastStep } = useWizard();
-  const createOrganization = t.organization.create.useMutation();
+  const createOrganization = trpc.organization.create.useMutation();
   const router = useRouter();
   const submit = form.handleSubmit(
     async ({ organization }: z.infer<typeof formSchema>) => {

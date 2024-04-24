@@ -1,16 +1,17 @@
 import { DashboardHeader } from '@/components/header';
 import { Separator } from '@/components/ui/separator';
-import * as invitationCrud from '@/crud/invitation';
-import * as organizationCrud from '@/crud/organization';
-import { getCurrentUser } from '@/lib/auth/session';
+import {
+  invitation as invitationCrud,
+  organization as organizationCrud,
+} from '@superscale/crud';
+import { OrganizationWithMembers } from '@superscale/crud/types';
+import { getCurrentUser } from '@superscale/lib/auth/session';
 import { redirect } from 'next/navigation';
 import { InvitationForm } from './invitation-form';
 import { MembersTable } from './tables';
 import { RowData } from './tables/columns';
 
-async function fetchData(
-  organization: organizationCrud.OrganizationWithMembers
-) {
+async function fetchData(organization: OrganizationWithMembers) {
   const invitations = await invitationCrud.listByOrganization(organization.id);
 
   const data: RowData[] = [];

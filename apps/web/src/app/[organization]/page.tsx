@@ -1,4 +1,4 @@
-import { getCurrentUser } from '@/lib/auth/session';
+import { getCurrentUser } from '@superscale/lib/auth/session';
 import { redirect } from 'next/navigation';
 
 export default async function Dashboard() {

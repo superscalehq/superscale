@@ -1,0 +1,5 @@
+{
+	"extends": "@superscale/tsconfig/lib.tsconfig.json",
+	"include": ["."],
+	"exclude": ["node_modules"]
+}

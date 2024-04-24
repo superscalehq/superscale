@@ -1,7 +1,7 @@
 import { DashboardHeader } from '@/components/header';
 import { Separator } from '@/components/ui/separator';
-import * as organizationCrud from '@/crud/organization';
-import { getCurrentUser } from '@/lib/auth/session';
+import { organization as organizationCrud } from '@superscale/crud';
+import { getCurrentUser } from '@superscale/lib/auth/session';
 import { redirect } from 'next/navigation';
 import { DeleteOrganization } from './delete-org';
 import { OrganizationSettingsForm } from './org-details-form';

@@ -1,15 +1,14 @@
 import { Back } from '@/components/layout/back';
 import { WorkspaceNav } from '@/components/nav/workspace-nav';
-import * as userCrud from '@/crud/user';
-import { authOptions } from '@/lib/auth/authOptions';
 import { serverConfig } from '@/lib/config';
-import { getServerSession } from 'next-auth';
+import { user as userCrud } from '@superscale/crud';
+import { getServerSession } from '@superscale/lib/auth';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import Onboarding from './steps';
 
 export default async function OnboardingPage() {
-  const session = await getServerSession(authOptions);
+  const { session } = await getServerSession();
   if (!session) {
     return redirect('/auth/sign-in');
   }

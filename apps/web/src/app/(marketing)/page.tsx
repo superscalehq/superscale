@@ -1,9 +1,9 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Icons } from '@/components/util/icons';
 import Link from 'next/link';
 import Feature from './components/feature';
 import Pricing from './components/pricing';
-import { Icons } from '@/components/util/icons';
 
 export default async function Home() {
   return (

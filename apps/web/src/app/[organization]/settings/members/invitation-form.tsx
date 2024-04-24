@@ -18,10 +18,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/components/ui/use-toast';
-import { UserWithMemberships } from '@/crud/user';
-import { t } from '@/lib/trpc';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Organization, OrganizationRole } from '@prisma/client';
+import { UserWithMemberships } from '@superscale/crud/types';
+import { Organization, OrganizationRole } from '@superscale/prisma/client';
+import { trpc } from '@superscale/trpc/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -47,7 +47,7 @@ export function InvitationForm({ organization }: Props) {
     },
   });
   const [loading, setLoading] = useState(false);
-  const invite = t.organization.invite.useMutation();
+  const invite = trpc.organization.invite.useMutation();
   const { toast } = useToast();
   const submit = form.handleSubmit(async ({ email, role }) => {
     try {
